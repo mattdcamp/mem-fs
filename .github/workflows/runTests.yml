@@ -18,6 +18,5 @@ jobs:
         cache: 'yarn'
         cache-dependency-path: 'yarn.lock'
     - run: yarn 
-    - run: yarn install --production=false
     - run: yarn build
     - run: yarn test-ci
