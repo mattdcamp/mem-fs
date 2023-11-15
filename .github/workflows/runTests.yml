@@ -3,12 +3,14 @@ name: Test CI
 on: push
 
 jobs:
-  build:
+  tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    permissions:
+      pull-requests: write
+      contents: write
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
@@ -17,6 +19,13 @@ jobs:
         node-version-file: '.nvmrc'
         cache: 'yarn'
         cache-dependency-path: 'yarn.lock'
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findpr
     - run: yarn install --inline-builds
     - run: yarn build
     - run: yarn test-ci
+    - uses: ArtiomTr/jest-coverage-report-action@v2
+      with:
+        coverage-file: ./report.json
+        prnumber: ${{ steps.findPr.outputs.number }}
+    
