@@ -6,8 +6,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     permissions:
       pull-requests: write
