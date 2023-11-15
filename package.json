@@ -9,8 +9,9 @@
     "start": "node ./bin/src/main.js",
     "dev": "ts-node ./src/main.ts",
     "test": "jest ./test/",
-    "test-unit": "jest ./test/unit",
-    "test-integration": "jest ./test/integration"
+    "test-unit": "jest ./test/unit/",
+    "test-integration": "jest ./test/integration/",
+    "test-ci": "jest ./test/ --reporters=\"github-actions\""
   },
   "packageManager": "yarn@4.0.2",
   "devDependencies": {
