@@ -5,13 +5,13 @@
   "repository": "https://github.com/mattdcamp/mem-fs.git",
   "author": "mattdcamp",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "build-docker": "yarn clean && yarn build && docker build -t mem-fs .",
     "clean": "yarn del bin",
     "clean-all": "yarn clean && yarn cache clear",
-    "start": "node ./bin/src/main.js",
+    "start": "node ./bin/main.js",
     "dev": "ts-node ./src/main.ts",
-    "test": "jest ./test/",
+    "test": "jest",
     "test-unit": "jest ./test/unit/",
     "test-integration": "jest ./test/integration/",
     "test-ci": "jest ./test/ --reporters=\"github-actions\""
