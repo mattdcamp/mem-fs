@@ -14,7 +14,7 @@
     "test-ci": "jest ./test/ --reporters=\"github-actions\""
   },
   "packageManager": "yarn@4.0.2",
-  "devDependencies": {
+  "dependencies": {
     "@types/jest": "^29.5.8",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "eslint": "^8.0.1",
