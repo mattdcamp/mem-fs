@@ -15,7 +15,7 @@
     "test-unit": "jest ./test/unit/",
     "test-integration": "jest ./test/integration/",
     "test-coverage": "jest --coverage",
-    "test-ci": "jest ./test/ --reporters=\"github-actions\" --coverage=false"
+    "test-ci": "jest ./test/ --ci --json --coverage --testLocationInResults --outputFile=report.json --reporters=\"github-actions\""
   },
   "packageManager": "yarn@4.0.2",
   "devDependencies": {
