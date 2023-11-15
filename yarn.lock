@@ -991,6 +991,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jest@npm:^29.5.8":
+  version: 29.5.8
+  resolution: "@types/jest@npm:29.5.8"
+  dependencies:
+    expect: "npm:^29.0.0"
+    pretty-format: "npm:^29.0.0"
+  checksum: a28e7827ea7e1a2aace6a386868fa6b8402c162d6c71570aed2c29d3745ddc22ceef6899a20643071817905d3c57b670a7992fc8760bff65939351fd4dc481cf
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.12":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
@@ -2363,7 +2373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect@npm:^29.7.0":
+"expect@npm:^29.0.0, expect@npm:^29.7.0":
   version: 29.7.0
   resolution: "expect@npm:29.7.0"
   dependencies:
@@ -3657,7 +3667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.7.0":
+"jest@npm:^29.5.8":
   version: 29.7.0
   resolution: "jest@npm:29.7.0"
   dependencies:
@@ -3910,6 +3920,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "mem-fs@workspace:."
   dependencies:
+    "@types/jest": "npm:^29.5.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.4.0"
     eslint: "npm:^8.0.1"
     eslint-config-prettier: "npm:^9.0.0"
@@ -3917,7 +3928,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.25.2"
     eslint-plugin-n: "npm:^15.0.0 || ^16.0.0 "
     eslint-plugin-promise: "npm:^6.0.0"
-    jest: "npm:^29.7.0"
+    jest: "npm:^29.5.8"
     prettier: "npm:3.1.0"
     ts-jest: "npm:^29.1.1"
     ts-node: "npm:^10.9.1"
@@ -4419,7 +4430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^29.7.0":
+"pretty-format@npm:^29.0.0, pretty-format@npm:^29.7.0":
   version: 29.7.0
   resolution: "pretty-format@npm:29.7.0"
   dependencies:
