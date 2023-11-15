@@ -1,10 +1,6 @@
 name: Test CI
 
-on:
-  push:
-    branches: [ $default-branch ]
-  pull_request_target:
-    branches: [ $default-branch ]
+on: push
 
 jobs:
   build:
