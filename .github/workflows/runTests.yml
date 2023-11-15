@@ -17,6 +17,6 @@ jobs:
         node-version-file: '.nvmrc'
         cache: 'yarn'
         cache-dependency-path: 'yarn.lock'
-    - run: yarn install --production=false
+    - run: yarn install --inline-builds
     - run: yarn build
     - run: yarn test-ci
