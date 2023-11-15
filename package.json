@@ -5,18 +5,22 @@
   "repository": "https://github.com/mattdcamp/mem-fs.git",
   "author": "mattdcamp",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./bin/src/main.js",
+    "build": "tsc -p tsconfig.build.json",
+    "build-docker": "yarn clean && yarn build && docker build -t mem-fs .",
+    "clean": "yarn del bin",
+    "clean-all": "yarn clean && yarn cache clear",
+    "start": "node ./bin/main.js",
     "dev": "ts-node ./src/main.ts",
-    "test": "jest ./test/",
+    "test": "jest",
     "test-unit": "jest ./test/unit/",
     "test-integration": "jest ./test/integration/",
     "test-ci": "jest ./test/ --reporters=\"github-actions\""
   },
   "packageManager": "yarn@4.0.2",
-  "dependencies": {
+  "devDependencies": {
     "@types/jest": "^29.5.8",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "del-cli": "^5.1.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard-with-typescript": "^39.1.1",
