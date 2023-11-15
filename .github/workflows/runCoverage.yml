@@ -1,5 +1,8 @@
 name: Test Coverage CI
-on: push
+on:
+  pull_request_target:
+    branches:
+      - main
 
 jobs:
   coverage:
