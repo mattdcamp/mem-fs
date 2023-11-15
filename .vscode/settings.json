@@ -3,6 +3,12 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
+  "files.exclude": {
+    "bin": true,
+    "coverage": true,
+    ".pnp*": true,
+    // ".yarn": true,
+  },
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "eslint.nodePath": ".yarn/sdks",
