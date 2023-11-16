@@ -29,4 +29,5 @@ jobs:
       with:
         coverage-file: ./report.json
         prnumber: ${{ steps.findPr.outputs.number }}
+        annotations: none
     
