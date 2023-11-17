@@ -1,5 +1,9 @@
-{ 
+{
   "editor.tabSize": 2,
+  "editor.rulers": [80, 120],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": ".prettierrc.yml",
   "search.exclude": {
     "**/.yarn": true,
     "**/.pnp.*": true
@@ -7,7 +11,7 @@
   "files.exclude": {
     "bin": true,
     "coverage": true,
-    ".pnp*": true,
+    ".pnp*": true
     // ".yarn": true,
   },
   "typescript.tsdk": ".yarn/sdks/typescript/lib",

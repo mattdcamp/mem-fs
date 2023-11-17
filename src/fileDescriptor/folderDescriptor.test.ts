@@ -1,4 +1,4 @@
-import { FolderDescriptor } from ".";
+import { FolderDescriptor } from '.';
 
 describe('folderDescriptor', () => {
   describe('root folders', () => {

@@ -1,4 +1,4 @@
-import { FileDescriptor, FolderDescriptor } from ".";
+import { FileDescriptor, FolderDescriptor } from '.';
 
 describe('fileDescriptor', () => {
   describe('creating a file', () => {
@@ -24,6 +24,5 @@ describe('fileDescriptor', () => {
     it('should have the correct parent', () => {
       expect(file.parent).toBe(folder);
     });
-
   });
 });
