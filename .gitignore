@@ -36,3 +36,6 @@ node_modules/
 
 # build directory
 bin
+
+# ci test reports
+report.json
