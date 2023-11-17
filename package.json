@@ -13,7 +13,7 @@
     "dev": "ts-node ./src/main.ts",
     "test": "jest",
     "test-ci": "jest --ci --json --coverage --testLocationInResults --outputFile=report.json --reporters=\"github-actions\" && yarn lint && yarn format-check",
-    "lint": ":eslint --ext .ts ./src",
+    "lint": "eslint --ext .ts ./src",
     "format": "prettier --write \"./src/**/*.ts\"",
     "format-check": "prettier --check \"./src/**/*.ts\""
   },
