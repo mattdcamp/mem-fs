@@ -1,14 +1,14 @@
-import { type FileSystemDescriptor } from ".";
+import { type FolderDescriptor, type FileSystemDescriptor } from ".";
 
-export class FileDescriptorImpl implements FileSystemDescriptor {
+export class FileDescriptor implements FileSystemDescriptor {
   name: string;
-  parent: FileSystemDescriptor;
+  parent: FolderDescriptor;
   content: string;
 
-  constructor(name: string, parent: FileSystemDescriptor, content: string) {
+  constructor(name: string, parent: FolderDescriptor) {
     this.name = name;
     this.parent = parent;
-    this.content = content;
+    this.content = '';
   }
 
   get path(): string {
