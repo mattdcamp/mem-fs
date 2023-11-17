@@ -25,6 +25,8 @@ jobs:
     - run: yarn install --inline-builds
     - run: yarn build
     - run: yarn test-ci
+    - run: yarn lint
+    - run: yarn format-check
     - uses: ArtiomTr/jest-coverage-report-action@v2
       with:
         coverage-file: ./report.json
