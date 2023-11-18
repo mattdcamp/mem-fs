@@ -1,12 +1,13 @@
-import { FolderDescriptor } from '.';
+import { type FileSystemDescriptor, FolderDescriptorImpl } from '.';
 
 describe('folderDescriptor', () => {
+  let rootFolder: FolderDescriptorImpl;
+  beforeEach(() => {
+    rootFolder = new FolderDescriptorImpl();
+  });
+
   describe('root folders', () => {
     describe('creating a root folder', () => {
-      let rootFolder: FolderDescriptor;
-      beforeEach(() => {
-        rootFolder = new FolderDescriptor();
-      });
       it('should create a root folder', () => {
         expect(rootFolder).toBeDefined();
       });
@@ -23,11 +24,9 @@ describe('folderDescriptor', () => {
   });
 
   describe('sub folders', () => {
-    let rootFolder: FolderDescriptor;
-    let subFolder: FolderDescriptor;
+    let subFolder: FolderDescriptorImpl;
     beforeEach(() => {
-      rootFolder = new FolderDescriptor();
-      subFolder = new FolderDescriptor('subFolder', rootFolder);
+      subFolder = new FolderDescriptorImpl('subFolder', rootFolder);
     });
     it('should create a sub folder', () => {
       expect(subFolder).toBeDefined();
@@ -40,6 +39,42 @@ describe('folderDescriptor', () => {
     });
     it('should have a path', () => {
       expect(subFolder.path).toBe('/subFolder/');
+    });
+  });
+
+  describe('addContent', () => {
+    let subConent: FileSystemDescriptor | null;
+    beforeEach(() => {
+      subConent = new FolderDescriptorImpl('subContent', rootFolder);
+      rootFolder.addContent(subConent);
+    });
+
+    it('should add content to the folder', () => {
+      expect(rootFolder.findChild('subContent')).toBe(subConent);
+    });
+
+    it('should throw an error if the content name is `.`', () => {
+      expect(() => {
+        rootFolder.addContent(new FolderDescriptorImpl('.', rootFolder));
+      }).toThrow();
+    });
+
+    it('should throw an error if the content name is `..`', () => {
+      expect(() => {
+        rootFolder.addContent(new FolderDescriptorImpl('..', rootFolder));
+      }).toThrow();
+    });
+
+    it('should throw an error if the content name is `/`', () => {
+      expect(() => {
+        rootFolder.addContent(new FolderDescriptorImpl('/', rootFolder));
+      }).toThrow();
+    });
+
+    it('should throw an error if the content name contains `/`', () => {
+      expect(() => {
+        rootFolder.addContent(new FolderDescriptorImpl('a/a', rootFolder));
+      }).toThrow();
     });
   });
 });
