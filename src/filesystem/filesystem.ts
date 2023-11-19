@@ -28,6 +28,18 @@ export class FileSystemImpl implements FileSystem {
     return this.pwd();
   }
 
+  ls(path?: string): string {
+    if (path == null) {
+      path = '';
+    }
+    const resolvedPath = resolvePath(path, this.workingFolder, this.rootFolder);
+    if (!resolvedPath.isFolder) {
+      throw new Error(`Path ${path} is not a folder`);
+    }
+    const resolvedFolder = resolvedPath as FolderDescriptor;
+    return resolvedFolder.content.map((descriptor) => descriptor.name).join(', ');
+  }
+
   pwd(): string {
     return this.workingFolder.path;
   }

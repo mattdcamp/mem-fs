@@ -6,6 +6,7 @@ import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
  * branch node if hte folder contains any children.
  */
 export interface FolderDescriptor extends FileSystemDescriptor {
+  content: FileSystemDescriptor[];
   findChild: (name: string) => FileSystemDescriptor | null;
   addContent: (content: FileSystemDescriptor) => void;
 }
@@ -15,6 +16,7 @@ export class FolderDescriptorImpl implements FolderDescriptor {
   name: string;
   parent: FolderDescriptor | null;
   content: FileSystemDescriptor[];
+  lastModified: Date;
 
   /**
    * @param name The name of the folder. Null is allowed for the root node.
@@ -24,6 +26,7 @@ export class FolderDescriptorImpl implements FolderDescriptor {
     this.name = name ?? '';
     this.parent = parent ?? null;
     this.content = [];
+    this.lastModified = new Date();
   }
 
   get path(): string {
@@ -34,8 +37,12 @@ export class FolderDescriptorImpl implements FolderDescriptor {
     }
   }
 
+  get size(): number {
+    return this.content.reduce((totalSize, descriptor) => totalSize + descriptor.size, 0);
+  }
+
   addContent(content: FileSystemDescriptor): void {
-    if (this.content === undefined) {
+    if (content == null) {
       throw new Error('content is undefined');
     }
 
@@ -47,7 +54,18 @@ export class FolderDescriptorImpl implements FolderDescriptor {
       throw new Error(`A file or folder with the name ${content.name} already exists in ${this.path}`);
     }
 
+    this.lastModified = new Date();
     this.content.push(content);
+
+    this.content.sort((a, b) => {
+      if (a.isFolder && !b.isFolder) {
+        return -1;
+      } else if (b.isFolder && !a.isFolder) {
+        return 1;
+      } else {
+        return a.name.localeCompare(b.name, undefined, { numeric: true });
+      }
+    });
   }
 
   findChild(name: string): FileSystemDescriptor | null {

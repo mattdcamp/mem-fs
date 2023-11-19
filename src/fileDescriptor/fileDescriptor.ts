@@ -13,6 +13,7 @@ export class FileDescriptorImpl implements FileDescriptor {
   name: string;
   parent: FolderDescriptorImpl;
   content: string;
+  lastModified: Date;
 
   /**
    * @param name The filename of the file
@@ -22,9 +23,14 @@ export class FileDescriptorImpl implements FileDescriptor {
     this.name = name;
     this.parent = parent;
     this.content = '';
+    this.lastModified = new Date();
   }
 
   get path(): string {
     return `${this.parent.path}${this.name}`;
+  }
+
+  get size(): number {
+    return this.content.length;
   }
 }

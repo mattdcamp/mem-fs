@@ -24,6 +24,15 @@ export interface FileSystemDescriptor {
   content: FileSystemDescriptorContent;
 
   /**
+   * The size of the node's content in bytes.
+   */
+  readonly size: number;
+
+  /**
+   * The date and time this node was created.
+   */
+  lastModified: Date;
+  /**
    * Returns true if this node can have children.
    */
   readonly isFolder: boolean;

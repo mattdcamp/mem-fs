@@ -18,5 +18,5 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
-  "jest.jestCommandLine": "yarn jest --detectOpenHandles"
+  "jest.jestCommandLine": "yarn test"
 }
