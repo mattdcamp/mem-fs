@@ -63,6 +63,22 @@ describe('FileSystemImpl', () => {
       expect(filesystem.workingFolder).toBe(rootFolder);
     });
   });
+
+  describe('pwd', () => {
+    it('should return the path of the working folder', () => {
+      expect(filesystem.pwd()).toBe(rootFolder.path);
+    });
+
+    describe('when the working folder is changed', () => {
+      beforeEach(() => {
+        filesystem.cd('subFolder');
+      });
+
+      it('should return the path of the working folder', () => {
+        expect(filesystem.pwd()).toBe(subFolder.path);
+      });
+    });
+  });
 });
 
 describe('startFileSystem', () => {
