@@ -11,7 +11,7 @@
     "clean-all": "yarn clean && yarn cache clear",
     "start": "node ./bin/main.js",
     "dev": "ts-node ./src/main.ts",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test-ci": "jest --ci --json --coverage --testLocationInResults --outputFile=report.json --reporters=\"github-actions\"",
     "lint": "eslint --ext .ts ./src",
     "format-write": "prettier --write \"./src/**/*.ts\"",

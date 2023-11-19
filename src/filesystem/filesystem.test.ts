@@ -79,6 +79,37 @@ describe('FileSystemImpl', () => {
       });
     });
   });
+
+  describe('ls', () => {
+    let emptyFolder: FolderDescriptorImpl;
+    beforeEach(() => {
+      emptyFolder = new FolderDescriptorImpl('emptyFolder', sub2Folder);
+      sub2Folder.addContent(emptyFolder);
+    });
+
+    it('should return the content of the working folder', () => {
+      expect(filesystem.ls()).toBe('subFolder, file');
+    });
+    it('should return the content of the working folder with relative path', () => {
+      expect(filesystem.ls('subFolder')).toBe('sub2Folder, subFolderFile');
+    });
+
+    it('should return the content of the working folder with absolute path', () => {
+      expect(filesystem.ls('/subFolder')).toBe('sub2Folder, subFolderFile');
+    });
+
+    it('should return the content of an empty folder', () => {
+      expect(filesystem.ls('subFolder/sub2Folder/emptyFolder')).toBe('');
+    });
+
+    it('should fail if the path is not a folder', () => {
+      expect(() => filesystem.ls('subFolder/subFolderFile')).toThrow();
+    });
+
+    it('should throw an error if the path is invalid', () => {
+      expect(() => filesystem.ls('foo/bar')).toThrow();
+    });
+  });
 });
 
 describe('startFileSystem', () => {
