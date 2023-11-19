@@ -11,15 +11,16 @@ export interface FolderDescriptor extends FileSystemDescriptor {
 }
 
 export class FolderDescriptorImpl implements FolderDescriptor {
+  isFolder = true;
   name: string;
-  parent: FileSystemDescriptor | null;
+  parent: FolderDescriptor | null;
   content: FileSystemDescriptor[];
 
   /**
    * @param name The name of the folder. Null is allowed for the root node.
    * @param parent The parent folder of this folder. Null is allowed for the root node.
    */
-  constructor(name?: string | null, parent?: FileSystemDescriptor | null) {
+  constructor(name?: string | null, parent?: FolderDescriptor | null) {
     this.name = name ?? '';
     this.parent = parent ?? null;
     this.content = [];
@@ -38,17 +39,12 @@ export class FolderDescriptorImpl implements FolderDescriptor {
       throw new Error('content is undefined');
     }
 
-    if (
-      DISALLOWED_CONTENT_NAMES.includes(content.name) ||
-      content.name.includes(PATH_SEPARATOR)
-    ) {
+    if (DISALLOWED_CONTENT_NAMES.includes(content.name) || content.name.includes(PATH_SEPARATOR)) {
       throw new Error(`Invalid name ${content.name}`);
     }
 
     if (this.findChild(content.name) !== null) {
-      throw new Error(
-        `A file or folder with the name ${content.name} already exists in ${this.path}`,
-      );
+      throw new Error(`A file or folder with the name ${content.name} already exists in ${this.path}`);
     }
 
     this.content.push(content);

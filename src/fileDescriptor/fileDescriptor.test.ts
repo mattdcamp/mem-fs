@@ -1,4 +1,4 @@
-import { FileDescriptor, FolderDescriptorImpl } from '.';
+import { type FileDescriptor, FileDescriptorImpl, FolderDescriptorImpl } from '.';
 
 describe('fileDescriptor', () => {
   describe('creating a file', () => {
@@ -6,7 +6,7 @@ describe('fileDescriptor', () => {
     let file: FileDescriptor;
     beforeEach(() => {
       folder = new FolderDescriptorImpl();
-      file = new FileDescriptor('file.txt', folder);
+      file = new FileDescriptorImpl('file.txt', folder);
     });
 
     it('should create a file', () => {
