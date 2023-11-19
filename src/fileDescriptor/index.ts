@@ -1,3 +1,5 @@
+import { type FolderDescriptor } from './folderDescriptor';
+
 export type FileSystemDescriptorContent = FileSystemDescriptor[] | string;
 
 export interface FileSystemDescriptor {
@@ -14,12 +16,17 @@ export interface FileSystemDescriptor {
   /**
    * The node above this node in the file system. Null is allowed for the root node.
    */
-  parent: FileSystemDescriptor | null;
+  parent: FolderDescriptor | null;
 
   /**
    * The content of the node, which differs based on the specific type of node.
    */
   content: FileSystemDescriptorContent;
+
+  /**
+   * Returns true if this node can have children.
+   */
+  readonly isFolder: boolean;
 }
 
 export * from './fileDescriptor';

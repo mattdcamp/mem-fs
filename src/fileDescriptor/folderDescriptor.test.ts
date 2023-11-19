@@ -14,8 +14,8 @@ describe('folderDescriptor', () => {
       it('should have an empty name', () => {
         expect(rootFolder.name).toBe('');
       });
-      it('should have a null parent', () => {
-        expect(rootFolder.parent).toBeNull();
+      it('should have a parent that points to null', () => {
+        expect(rootFolder.parent).toBe(null);
       });
       it('should have a path of /', () => {
         expect(rootFolder.path).toBe('/');
