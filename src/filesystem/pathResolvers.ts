@@ -15,10 +15,7 @@ export function resolvePath(
   rootFolder: FolderDescriptor,
 ): FileSystemDescriptor {
   const pathParts = path.split(PATH_SEPARATOR);
-  let currentDescriptor: FolderDescriptor = workingFolder;
-  if (path.startsWith(PATH_SEPARATOR)) {
-    currentDescriptor = rootFolder;
-  }
+  const currentDescriptor = path.startsWith('/') ? rootFolder : workingFolder;
   return resolvePathRecursive(pathParts, currentDescriptor);
 }
 
@@ -57,12 +54,12 @@ export function resolvePathRecursive(
       return resolvePathRecursive(pathParts, currentFolder);
     }
     return resolvePathRecursive(pathParts, currentFolder.parent);
+  }
+
+  const child = currentFolder.findChild(nextPart);
+  if (child === null) {
+    throw new Error(`Path ${nextPart} does not exist`);
   } else {
-    const child = currentFolder.findChild(nextPart);
-    if (child === null) {
-      throw new Error(`Path ${nextPart} does not exist`);
-    } else {
-      return resolvePathRecursive(pathParts, child);
-    }
+    return resolvePathRecursive(pathParts, child);
   }
 }
