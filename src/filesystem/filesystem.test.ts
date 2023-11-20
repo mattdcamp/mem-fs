@@ -110,6 +110,37 @@ describe('FileSystemImpl', () => {
       expect(() => filesystem.ls('foo/bar')).toThrow();
     });
   });
+
+  describe('rm', () => {
+    it('should remove a file', () => {
+      filesystem.rm('file');
+      expect(filesystem.ls()).toBe('subFolder');
+    });
+
+    it('should remove a folder', () => {
+      filesystem.rm('subFolder');
+      expect(filesystem.ls()).toBe('file');
+    });
+
+    it('should throw an error if the path is invalid', () => {
+      expect(() => {
+        filesystem.rm('foo/bar');
+      }).toThrow();
+    });
+
+    it('should throw an error if the path is the root folder', () => {
+      expect(() => {
+        filesystem.rm('/');
+      }).toThrow();
+    });
+
+    it('should throw an error if the path is the working folder', () => {
+      expect(() => {
+        filesystem.cd('subFolder');
+        filesystem.rm('.');
+      }).toThrow();
+    });
+  });
 });
 
 describe('startFileSystem', () => {

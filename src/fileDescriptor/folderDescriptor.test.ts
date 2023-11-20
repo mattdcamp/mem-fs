@@ -208,4 +208,36 @@ describe('folderDescriptor', () => {
       });
     });
   });
+
+  describe('removeContent', () => {
+    let subFolder: FileSystemDescriptor;
+    let subFile: FileSystemDescriptor;
+    beforeEach(() => {
+      subFolder = new FolderDescriptorImpl('subFolder', rootFolder);
+      rootFolder.addContent(subFolder);
+
+      subFile = new FileDescriptorImpl('subFile', rootFolder);
+      rootFolder.addContent(subFile);
+    });
+
+    describe('error handling', () => {
+      it('should throw an error if the name is not found', () => {
+        expect(() => {
+          rootFolder.removeContent('notFound');
+        }).toThrow();
+      });
+    });
+
+    it('should remove folders from the folder', () => {
+      rootFolder.removeContent('subFolder');
+      expect(rootFolder.findChild('subFolder')).toBeNull();
+      expect(rootFolder.findChild('subFile')).toBe(subFile);
+    });
+
+    it('should remove files from the folder', () => {
+      rootFolder.removeContent('subFile');
+      expect(rootFolder.findChild('subFile')).toBeNull();
+      expect(rootFolder.findChild('subFolder')).toBe(subFolder);
+    });
+  });
 });

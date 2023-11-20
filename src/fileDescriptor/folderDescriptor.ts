@@ -7,8 +7,33 @@ import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
  */
 export interface FolderDescriptor extends FileSystemDescriptor {
   content: FileSystemDescriptor[];
+
+  /**
+   * Search this directory for a child with the given name.
+   *
+   * @param name The name property of the child to find
+   * @returns the child with the given name, or null if no such child exists
+   */
   findChild: (name: string) => FileSystemDescriptor | null;
+
+  /**
+   * Add a new child descriptor to this folder. The name of the child must be unique within the folder.
+   *
+   * @param content the descriptor to add to this folder
+   * @throws Error if the name of the child is not unique within the folder
+   * @throws Error if the name of the child is invalid
+   * @throws Error if the descriptor is null or undefined
+   * @returns
+   */
   addContent: (content: FileSystemDescriptor) => void;
+
+  /**
+   * Find the child with the given name and remove it from the folder.
+   *
+   * @param name the name of the child to remove from this folder
+   * @throws Error if no child with the given name exists in this folder
+   */
+  removeContent: (name: string) => void;
 }
 
 export class FolderDescriptorImpl implements FolderDescriptor {
@@ -66,6 +91,15 @@ export class FolderDescriptorImpl implements FolderDescriptor {
         return a.name.localeCompare(b.name, undefined, { numeric: true });
       }
     });
+  }
+
+  removeContent(name: string): void {
+    const indexToDelete = this.content.findIndex((descriptor) => descriptor.name === name);
+    if (indexToDelete >= 0) {
+      this.content.splice(indexToDelete, 1);
+    } else {
+      throw new Error(`No file or folder with the name ${name} exists in ${this.path}`);
+    }
   }
 
   findChild(name: string): FileSystemDescriptor | null {
