@@ -40,6 +40,18 @@ export class FileSystemImpl implements FileSystem {
     return resolvedFolder.content.map((descriptor) => descriptor.name).join(', ');
   }
 
+  rm(path: string): void {
+    const target = resolvePath(path, this.workingFolder, this.rootFolder);
+    const targetName = target.name;
+    const targetParent = target.parent as FolderDescriptor;
+
+    if (targetParent == null) {
+      throw new Error(`Cannot delete ${path}. It is the root folder`);
+    }
+
+    targetParent.removeContent(targetName);
+  }
+
   pwd(): string {
     return this.workingFolder.path;
   }
