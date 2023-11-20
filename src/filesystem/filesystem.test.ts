@@ -133,6 +133,13 @@ describe('FileSystemImpl', () => {
         filesystem.rm('/');
       }).toThrow();
     });
+
+    it('should throw an error if the path is the working folder', () => {
+      expect(() => {
+        filesystem.cd('subFolder');
+        filesystem.rm('.');
+      }).toThrow();
+    });
   });
 });
 
