@@ -6,6 +6,7 @@ import type { FileSystemDescriptor, FolderDescriptor } from '../fileDescriptor';
  *
  * @param path the path (either relative or absolute) to resolve.
  * @param workingFolder the working directory to use if the path is relative.
+ * @param rootFolder the root directory to use if the path is absolute.
  * @returns the FileSystemDescriptor for the path.
  * @throws Error if the path is invalid in any way.
  */
