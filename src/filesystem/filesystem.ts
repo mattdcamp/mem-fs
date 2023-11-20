@@ -1,9 +1,13 @@
 import { type FolderDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
+import { buildFolder } from './folderBuilders';
 import { resolvePath } from './pathResolvers';
 
 export interface FileSystem {
-  cd: (path: string) => string;
   pwd: () => string;
+  cd: (path: string) => string;
+  ls: (path?: string) => string;
+  rm: (path?: string | null) => void;
+  mkdir: (path: string, makeParents: boolean) => void;
 }
 
 export function startFileSystem(): FileSystem {
@@ -17,6 +21,10 @@ export class FileSystemImpl implements FileSystem {
   constructor() {
     this.rootFolder = new FolderDescriptorImpl();
     this.workingFolder = this.rootFolder;
+  }
+
+  pwd(): string {
+    return this.workingFolder.path;
   }
 
   cd(path: string): string {
@@ -40,6 +48,13 @@ export class FileSystemImpl implements FileSystem {
     return resolvedFolder.content.map((descriptor) => descriptor.name).join(', ');
   }
 
+  mkdir(path: string, makeParents?: boolean | null): void {
+    if (makeParents == null) {
+      makeParents = false;
+    }
+    buildFolder(path, makeParents, this.workingFolder, this.rootFolder);
+  }
+
   rm(path?: string | null): void {
     if (path == null) {
       path = '';
@@ -58,9 +73,5 @@ export class FileSystemImpl implements FileSystem {
     }
 
     targetParent.removeContent(targetName);
-  }
-
-  pwd(): string {
-    return this.workingFolder.path;
   }
 }

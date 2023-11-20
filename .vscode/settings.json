@@ -17,6 +17,6 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "eslint.nodePath": ".yarn/sdks",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
-  "jest.jestCommandLine": "yarn test"
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs"
+  // "jest.jestCommandLine": "yarn test"
 }
