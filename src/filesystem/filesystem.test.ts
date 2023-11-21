@@ -141,6 +141,48 @@ describe('FileSystemImpl', () => {
       }).toThrow();
     });
   });
+
+  describe('mkdir', () => {
+    it('should create a folder', () => {
+      filesystem.mkdir('newFolder');
+      expect(filesystem.ls()).toBe('newFolder, subFolder, file');
+    });
+
+    it('should create a folder with relative path', () => {
+      filesystem.cd('subFolder');
+      filesystem.mkdir('newFolder');
+      expect(filesystem.ls()).toBe('newFolder, sub2Folder, subFolderFile');
+    });
+
+    it('should create a folder with absolute path', () => {
+      filesystem.cd('subFolder');
+      filesystem.mkdir('/subFolder/newFolder');
+      expect(filesystem.ls()).toBe('newFolder, sub2Folder, subFolderFile');
+    });
+
+    it('should create a folder with parents', () => {
+      filesystem.mkdir('subFolder/newFolder/newFolder2', true);
+      expect(filesystem.ls('subFolder/newFolder')).toBe('newFolder2');
+    });
+
+    it('should throw an error if the parents are missing', () => {
+      expect(() => {
+        filesystem.mkdir('foo/bar');
+      }).toThrow();
+    });
+
+    it('should throw an error if the path is a file', () => {
+      expect(() => {
+        filesystem.mkdir('file');
+      }).toThrow();
+    });
+
+    it('should throw an error if the path is an existing folder', () => {
+      expect(() => {
+        filesystem.mkdir('subFolder');
+      }).toThrow();
+    });
+  });
 });
 
 describe('startFileSystem', () => {
