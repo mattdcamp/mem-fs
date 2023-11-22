@@ -82,4 +82,4 @@ export class FileContentImpl implements FileContent {
   getReadableStream(): Readable {
     return Readable.from(this.content, { objectMode: false, encoding: 'utf8' });
   }
-} 
+}
