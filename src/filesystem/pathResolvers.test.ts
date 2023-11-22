@@ -1,5 +1,5 @@
 import { FileDescriptorImpl, FolderDescriptorImpl } from '../fileDescriptor';
-import { resolvePath, resolvePathRecursive } from './pathResolvers';
+import { resolveFile, resolvePath, resolvePathRecursive } from './pathResolvers';
 
 describe('pathResolvers', () => {
   let rootFolder: FolderDescriptorImpl;
@@ -105,4 +105,57 @@ describe('pathResolvers', () => {
       expect(() => resolvePathRecursive(['file', 'subFolder'], rootFolder)).toThrow();
     });
   });
+});
+
+describe('resolveFile', () => {
+  let rootFolder: FolderDescriptorImpl;
+  let subFolder: FolderDescriptorImpl;
+  let sub2Folder: FolderDescriptorImpl;
+  let file: FileDescriptorImpl;
+  let subFolderFile: FileDescriptorImpl;
+  let sub2FolderFile: FileDescriptorImpl;
+
+  beforeEach(() => {
+    rootFolder = new FolderDescriptorImpl();
+    subFolder = new FolderDescriptorImpl('subFolder', rootFolder);
+    sub2Folder = new FolderDescriptorImpl('sub2Folder', subFolder);
+    file = new FileDescriptorImpl('file', rootFolder);
+    subFolderFile = new FileDescriptorImpl('subFolderFile', subFolder);
+    sub2FolderFile = new FileDescriptorImpl('sub2FolderFile', sub2Folder);
+
+    rootFolder.addContent(file);
+    rootFolder.addContent(subFolder);
+    subFolder.addContent(subFolderFile);
+    subFolder.addContent(sub2Folder);
+    sub2Folder.addContent(sub2FolderFile);
+  });
+
+  describe('relative paths', () => {
+    let workingFolder: FolderDescriptorImpl;
+    beforeEach(() => {
+      workingFolder = subFolder;
+    });
+
+    it('should fail with no filename', () => {
+      expect(() => resolveFile('', false, workingFolder, rootFolder)).toThrow();
+    });
+
+    it('should resolve an existing file in the workingFolder', () => {
+      expect(resolveFile('subFolderFile', false, workingFolder, rootFolder)).toBe(subFolderFile);
+    });
+
+    it('should resolve a new file in the working folder', () => {
+      expect(resolveFile('newFile', true, workingFolder, rootFolder)).toBeInstanceOf(FileDescriptorImpl);
+    });
+
+    it('should fail when the file does not exist', () => {
+      expect(() => resolveFile('invalid', false, workingFolder, rootFolder)).toThrow();
+    });
+
+    it('should work with longer paths', () => {
+      expect(resolveFile('sub2Folder/sub2FolderFile', false, workingFolder, rootFolder)).toBe(sub2FolderFile);
+    });
+  });
+
+  describe('absolute paths', () => {});
 });

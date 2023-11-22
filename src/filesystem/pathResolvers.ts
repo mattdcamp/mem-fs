@@ -1,5 +1,10 @@
 import { PATH_SEPARATOR } from '../constants';
-import type { FileSystemDescriptor, FolderDescriptor } from '../fileDescriptor';
+import {
+  FileDescriptorImpl,
+  type FileDescriptor,
+  type FileSystemDescriptor,
+  type FolderDescriptor,
+} from '../fileDescriptor';
 
 /**
  * Helper function to resolve a Descriptor from a path starting at the workingDirectory.
@@ -63,4 +68,39 @@ export function resolvePathRecursive(
   } else {
     return resolvePathRecursive(pathParts, child);
   }
+}
+
+export function resolveFile(
+  path: string,
+  create: boolean,
+  workingFolder: FolderDescriptor,
+  rootFolder: FolderDescriptor,
+): FileDescriptor {
+  const pathParts = path.split('/');
+  const fileName = pathParts.pop();
+
+  if (fileName == null) {
+    throw new Error(`Path ${path} is not a valid file name`);
+  }
+
+  const targetParent = resolvePath(pathParts.join('/'), workingFolder, rootFolder);
+
+  if (!targetParent.isFolder) {
+    throw new Error(`Path ${path} is not a folder`);
+  }
+  const targetFolder = targetParent as FolderDescriptor;
+
+  let taretDescriptor = targetFolder.findChild(fileName);
+  if (taretDescriptor == null) {
+    if (!create) {
+      throw new Error(`Path ${path} does not exist`);
+    }
+    taretDescriptor = new FileDescriptorImpl(fileName, targetFolder);
+    targetFolder.addContent(taretDescriptor);
+  }
+
+  if (taretDescriptor.isFolder) {
+    throw new Error(`Path ${path} is a folder`);
+  }
+  return taretDescriptor as FileDescriptorImpl;
 }
