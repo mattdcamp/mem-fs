@@ -25,76 +25,92 @@ describe('pathResolvers', () => {
   });
 
   describe('resolvePath', () => {
-    describe('relative paths', () => {
-      let workingFolder: FolderDescriptorImpl;
-      beforeEach(() => {
-        workingFolder = subFolder;
+    describe('Resolve Singular Path', () => {
+      describe('relative paths', () => {
+        let workingFolder: FolderDescriptorImpl;
+        beforeEach(() => {
+          workingFolder = subFolder;
+        });
+
+        it('should resolve the workingFolder ""', () => {
+          expect(resolvePath('', workingFolder, rootFolder)[0]).toBe(subFolder);
+        });
+
+        it('should resolve the workingFolder "."', () => {
+          expect(resolvePath('.', workingFolder, rootFolder)[0]).toBe(subFolder);
+        });
+
+        it('should resolve the workingFolder "./"', () => {
+          expect(resolvePath('./', workingFolder, rootFolder)[0]).toBe(subFolder);
+        });
+
+        it('should resolve the parent folder on ..', () => {
+          expect(resolvePath('..', workingFolder, rootFolder)[0]).toBe(rootFolder);
+        });
+
+        it('should resolve subfolders', () => {
+          expect(resolvePath('sub2Folder', workingFolder, rootFolder)[0]).toBe(sub2Folder);
+        });
+
+        it('should resolve a file', () => {
+          expect(resolvePath('./sub2Folder/sub2FolderFile', workingFolder, rootFolder)[0]).toBe(sub2FolderFile);
+        });
+
+        it('should throw an error if the path is invalid', () => {
+          expect(() => resolvePath('invalid', workingFolder, rootFolder)).toThrow();
+        });
+
+        it('should throw an error if the path is invalid', () => {
+          expect(() => resolvePath('./subFile/invalid', workingFolder, rootFolder)).toThrow();
+        });
       });
 
-      it('should resolve the workingFolder ""', () => {
-        expect(resolvePath('', workingFolder, rootFolder)).toBe(subFolder);
-      });
+      describe('absolute paths', () => {
+        it('should resolve the root folder', () => {
+          expect(resolvePath('/', subFolder, rootFolder)[0]).toBe(rootFolder);
+        });
 
-      it('should resolve the workingFolder "."', () => {
-        expect(resolvePath('.', workingFolder, rootFolder)).toBe(subFolder);
-      });
-
-      it('should resolve the workingFolder "./"', () => {
-        expect(resolvePath('./', workingFolder, rootFolder)).toBe(subFolder);
-      });
-
-      it('should resolve the parent folder on ..', () => {
-        expect(resolvePath('..', workingFolder, rootFolder)).toBe(rootFolder);
-      });
-
-      it('should resolve subfolders', () => {
-        expect(resolvePath('sub2Folder', workingFolder, rootFolder)).toBe(sub2Folder);
-      });
-
-      it('should resolve a file', () => {
-        expect(resolvePath('./sub2Folder/sub2FolderFile', workingFolder, rootFolder)).toBe(sub2FolderFile);
-      });
-
-      it('should throw an error if the path is invalid', () => {
-        expect(() => resolvePath('invalid', workingFolder, rootFolder)).toThrow();
-      });
-
-      it('should throw an error if the path is invalid', () => {
-        expect(() => resolvePath('./subFile/invalid', workingFolder, rootFolder)).toThrow();
+        it('should resolve subfolders', () => {
+          expect(resolvePath('/subFolder', subFolder, rootFolder)[0]).toBe(subFolder);
+        });
       });
     });
 
-    describe('absolute paths', () => {
-      it('should resolve the root folder', () => {
-        expect(resolvePath('/', subFolder, rootFolder)).toBe(rootFolder);
+    describe('resolving multiple files with *', () => {
+      it('should resolve all files in the working folder', () => {
+        expect(resolvePath('*', subFolder, rootFolder)).toStrictEqual([sub2Folder, subFolderFile]);
       });
 
-      it('should resolve subfolders', () => {
-        expect(resolvePath('/subFolder', subFolder, rootFolder)).toBe(subFolder);
+      it('should resolve all files in the root folder', () => {
+        expect(resolvePath('/*', subFolder, rootFolder)).toStrictEqual([subFolder, file]);
+      });
+
+      it('should fail if * is not the fail path', () => {
+        expect(() => resolvePath('/*/anything', subFolder, rootFolder)).toThrow();
       });
     });
   });
 
   describe('resolvePathRecursive', () => {
     it('should resolve the root folder on empty', () => {
-      expect(resolvePathRecursive([], rootFolder)).toBe(rootFolder);
+      expect(resolvePathRecursive([], rootFolder)[0]).toBe(rootFolder);
     });
 
     it('should resolve the sub folder', () => {
-      expect(resolvePathRecursive(['subFolder'], rootFolder)).toBe(subFolder);
+      expect(resolvePathRecursive(['subFolder'], rootFolder)[0]).toBe(subFolder);
     });
 
     it('should resolve the files', () => {
-      expect(resolvePathRecursive(['file'], rootFolder)).toBe(file);
-      expect(resolvePathRecursive(['subFolder', 'subFolderFile'], rootFolder)).toBe(subFolderFile);
+      expect(resolvePathRecursive(['file'], rootFolder)[0]).toBe(file);
+      expect(resolvePathRecursive(['subFolder', 'subFolderFile'], rootFolder)[0]).toBe(subFolderFile);
     });
 
     it('should resolve .. form the root folder to the root folder', () => {
-      expect(resolvePathRecursive(['..'], rootFolder)).toBe(rootFolder);
+      expect(resolvePathRecursive(['..'], rootFolder)[0]).toBe(rootFolder);
     });
 
     it('should resolve .. anywhere in the path', () => {
-      expect(resolvePathRecursive(['subFolder', '..'], rootFolder)).toBe(rootFolder);
+      expect(resolvePathRecursive(['subFolder', '..'], rootFolder)[0]).toBe(rootFolder);
     });
 
     it('should throw an error if the path is invalid', () => {
