@@ -1,7 +1,8 @@
 import { type FolderDescriptorImpl, type FileSystemDescriptor } from '.';
+import { Writable, Readable } from 'stream';
 
 export interface FileDescriptor extends FileSystemDescriptor {
-  content: string;
+  content: FileContent;
 }
 
 /**
@@ -12,7 +13,7 @@ export class FileDescriptorImpl implements FileDescriptor {
 
   name: string;
   parent: FolderDescriptorImpl;
-  content: string;
+  content: FileContentImpl;
   lastModified: Date;
 
   /**
@@ -22,7 +23,7 @@ export class FileDescriptorImpl implements FileDescriptor {
   constructor(name: string, parent: FolderDescriptorImpl) {
     this.name = name;
     this.parent = parent;
-    this.content = '';
+    this.content = new FileContentImpl();
     this.lastModified = new Date();
   }
 
@@ -31,6 +32,54 @@ export class FileDescriptorImpl implements FileDescriptor {
   }
 
   get size(): number {
-    return this.content.length;
+    return this.content.size;
   }
 }
+
+export interface FileContent {
+  getWriteableStream: (append: boolean) => Writable;
+  getReadableStream: () => Readable;
+}
+
+export class FileContentImpl implements FileContent {
+  content: string;
+  locked: boolean;
+
+  constructor() {
+    this.content = '';
+    this.locked = false;
+  }
+
+  get size(): number {
+    return this.content.length;
+  }
+
+  getWriteableStream(append?: boolean): Writable {
+    if (append == null || !append) {
+      this.content = '';
+    }
+
+    if (this.locked) {
+      throw new Error('File is locked');
+    }
+
+    this.locked = true;
+
+    const writable = new Writable({
+      defaultEncoding: 'utf8',
+      write: (chunk) => {
+        this.content += chunk.toString();
+      },
+      final: (callback) => {
+        this.locked = false;
+        callback();
+      },
+    });
+
+    return writable;
+  }
+
+  getReadableStream(): Readable {
+    return Readable.from(this.content, { objectMode: false, encoding: 'utf8' });
+  }
+} 

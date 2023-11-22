@@ -1,6 +1,7 @@
+import { type FileContent } from './fileDescriptor';
 import { type FolderDescriptor } from './folderDescriptor';
 
-export type FileSystemDescriptorContent = FileSystemDescriptor[] | string;
+export type FileSystemDescriptorContent = FileSystemDescriptor[] | FileContent;
 
 export interface FileSystemDescriptor {
   /**

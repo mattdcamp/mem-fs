@@ -1,4 +1,4 @@
-import { type FileSystemDescriptor, FolderDescriptorImpl, FileDescriptorImpl } from '.';
+import { type FileSystemDescriptor, FolderDescriptorImpl, FileDescriptorImpl, type FileDescriptor } from '.';
 
 describe('folderDescriptor', () => {
   let rootFolder: FolderDescriptorImpl;
@@ -176,15 +176,17 @@ describe('folderDescriptor', () => {
     });
 
     describe('folder with files with data', () => {
-      let subFile: FileSystemDescriptor;
+      let subFile: FileDescriptor;
       beforeEach(() => {
         subFile = new FileDescriptorImpl('subFile', rootFolder);
-        subFile.content = 'Hello, world!';
+        const streamWriter = subFile.content.getWriteableStream(false);
+        streamWriter.write('hello world', 'utf8');
+        streamWriter.end();
         rootFolder.addContent(subFile);
       });
 
       it('should have a size of 13', () => {
-        expect(rootFolder.size).toBe(subFile.content.length);
+        expect(rootFolder.size).toBe(subFile.size);
       });
     });
   });

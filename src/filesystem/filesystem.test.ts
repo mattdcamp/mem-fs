@@ -183,6 +183,96 @@ describe('FileSystemImpl', () => {
       }).toThrow();
     });
   });
+
+  describe('readFile', () => {
+    it('should return the content of a file', async () => {
+      expect(await filesystem.readFile('file')).toBe('');
+    });
+
+    it('should return the content of a file with relative path', async () => {
+      expect(await filesystem.readFile('subFolder/subFolderFile')).toBe('');
+    });
+
+    it('should return the content of a file with absolute path', async () => {
+      expect(await filesystem.readFile('/subFolder/subFolderFile')).toBe('');
+    });
+
+    it('should throw an error if the path is a folder', async () => {
+      await expect(async () => {
+        await filesystem.readFile('subFolder');
+      }).rejects.toThrow();
+    });
+
+    it('should throw an error if the path is invalid', async () => {
+      await expect(async () => {
+        await filesystem.readFile('foo/bar');
+      }).rejects.toThrow();
+    });
+  });
+
+  describe('writeFile', () => {
+    describe('with existing content', () => {
+      let existingFile: FileDescriptorImpl;
+
+      beforeEach(() => {
+        existingFile = new FileDescriptorImpl('existingFile', rootFolder);
+        existingFile.content.content = 'existing content';
+        rootFolder.addContent(existingFile);
+      });
+
+      describe('with append', () => {
+        it('should append to the content with relative path', async () => {
+          await filesystem.writeFile('existingFile', ' new content', true);
+          expect(existingFile.content.content).toBe('existing content new content');
+        });
+
+        it('should append to the content with absolute path', async () => {
+          await filesystem.writeFile('/existingFile', ' new content', true);
+          expect(existingFile.content.content).toBe('existing content new content');
+        });
+      });
+
+      describe('without append', () => {
+        it('should overwrite the content with relative path', async () => {
+          await filesystem.writeFile('existingFile', 'new content');
+          expect(existingFile.content.content).toBe('new content');
+        });
+
+        it('should overwrite the content with absolute path', async () => {
+          await filesystem.writeFile('/existingFile', 'new content');
+          expect(existingFile.content.content).toBe('new content');
+        });
+      });
+    });
+
+    describe('with new files', () => {
+      it('should create a file with relative path', async () => {
+        await filesystem.writeFile('newFile', 'new content');
+        expect(filesystem.ls()).toBe('subFolder, file, newFile');
+        expect(await filesystem.readFile('newFile')).toBe('new content');
+      });
+
+      it('should create a file with absolute path', async () => {
+        await filesystem.writeFile('/newFile', 'new content');
+        expect(filesystem.ls()).toBe('subFolder, file, newFile');
+        expect(await filesystem.readFile('newFile')).toBe('new content');
+      });
+    });
+
+    describe('error handling', () => {
+      it('should throw an error if the path is a folder', async () => {
+        await expect(async () => {
+          await filesystem.writeFile('subFolder', 'new content');
+        }).rejects.toThrow();
+      });
+
+      it('should throw an error if the path is invalid', async () => {
+        await expect(async () => {
+          await filesystem.writeFile('..', 'new content');
+        }).rejects.toThrow();
+      });
+    });
+  });
 });
 
 describe('startFileSystem', () => {
