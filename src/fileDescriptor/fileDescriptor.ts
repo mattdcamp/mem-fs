@@ -3,6 +3,7 @@ import { Writable, Readable } from 'stream';
 
 export interface FileDescriptor extends FileSystemDescriptor {
   content: FileContent;
+  copy: () => FileDescriptor;
 }
 
 /**
@@ -33,6 +34,13 @@ export class FileDescriptorImpl implements FileDescriptor {
 
   get size(): number {
     return this.content.size;
+  }
+
+  copy(): FileDescriptor {
+    const copy = new FileDescriptorImpl(this.name, this.parent);
+    copy.content = this.content;
+    copy.lastModified = this.lastModified;
+    return copy;
   }
 }
 

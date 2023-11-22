@@ -279,6 +279,80 @@ describe('FileSystemImpl', () => {
       });
     });
   });
+
+  describe('cp', () => {
+    it('should copy a file without changing the name', () => {
+      filesystem.cp('subFolder/subFolderFile', '/');
+      expect(filesystem.ls()).toBe('subFolder, file, subFolderFile');
+    });
+
+    it('should copy a file with relative path', () => {
+      filesystem.cp('subFolder/subFolderFile', '/', 'newFile');
+      expect(filesystem.ls()).toBe('subFolder, file, newFile');
+    });
+
+    it('should copy a file with absolute path', () => {
+      filesystem.cp('/subFolder/subFolderFile', '/', 'newFile');
+      expect(filesystem.ls()).toBe('subFolder, file, newFile');
+    });
+
+    it('should copy a folder with relative path', () => {
+      filesystem.cp('subFolder/sub2Folder', '/', 'newFolder');
+      expect(filesystem.ls()).toBe('newFolder, subFolder, file');
+      expect(filesystem.ls('newFolder')).toBe('sub2FolderFile');
+    });
+
+    it('should copy a folder with absolute path', () => {
+      filesystem.cp('/subFolder/sub2Folder', '/', 'newFolder');
+      expect(filesystem.ls()).toBe('newFolder, subFolder, file');
+      expect(filesystem.ls('newFolder')).toBe('sub2FolderFile');
+    });
+
+    it('should throw an error if the parents are missing', () => {
+      expect(() => {
+        filesystem.cp('foo/bar', 'newFolder');
+      }).toThrow();
+    });
+  });
+
+  describe('mv', () => {
+    it('should move a file without changing the name', () => {
+      filesystem.mv('subFolder/subFolderFile', '/');
+      expect(filesystem.ls()).toBe('subFolder, file, subFolderFile');
+      expect(filesystem.ls('subFolder')).toBe('sub2Folder');
+    });
+
+    it('should move a file with relative path', () => {
+      filesystem.mv('subFolder/subFolderFile', '/', 'newFile');
+      expect(filesystem.ls()).toBe('subFolder, file, newFile');
+      expect(filesystem.ls('subFolder')).toBe('sub2Folder');
+    });
+
+    it('should move a file with absolute path', () => {
+      filesystem.mv('/subFolder/subFolderFile', '/', 'newFile');
+      expect(filesystem.ls()).toBe('subFolder, file, newFile');
+      expect(filesystem.ls('subFolder')).toBe('sub2Folder');
+    });
+
+    it('should move a folder with relative path', () => {
+      filesystem.mv('subFolder/sub2Folder', '/', 'newFolder');
+      expect(filesystem.ls()).toBe('newFolder, subFolder, file');
+      expect(filesystem.ls('newFolder')).toBe('sub2FolderFile');
+      expect(filesystem.ls('subFolder')).toBe('subFolderFile');
+    });
+
+    it('should move a folder with absolute path', () => {
+      filesystem.mv('/subFolder/sub2Folder', '/', 'newFolder');
+      expect(filesystem.ls()).toBe('newFolder, subFolder, file');
+      expect(filesystem.ls('newFolder')).toBe('sub2FolderFile');
+    });
+
+    it('should throw an error if the parents are missing', () => {
+      expect(() => {
+        filesystem.mv('foo/bar', 'newFolder');
+      }).toThrow();
+    });
+  });
 });
 
 describe('startFileSystem', () => {

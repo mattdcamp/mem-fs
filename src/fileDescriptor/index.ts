@@ -37,6 +37,11 @@ export interface FileSystemDescriptor {
    * Returns true if this node can have children.
    */
   readonly isFolder: boolean;
+
+  /**
+   * Returns a copy of this descriptor with a null parent.
+   */
+  copy: () => FileSystemDescriptor;
 }
 
 export * from './fileDescriptor';
