@@ -122,6 +122,12 @@ describe('FileSystemImpl', () => {
       expect(filesystem.ls()).toBe('file');
     });
 
+    it('should remove all children of a folder when * is used', () => {
+      filesystem.rm('subFolder/*');
+      expect(filesystem.ls()).toBe('subFolder, file');
+      expect(filesystem.ls('subFolder')).toBe('');
+    });
+
     it('should throw an error if the path is invalid', () => {
       expect(() => {
         filesystem.rm('foo/bar');

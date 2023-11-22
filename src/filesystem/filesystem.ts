@@ -41,7 +41,12 @@ export class FileSystemImpl implements FileSystem {
    * @throws Error if the path cannot be resolved to a folder
    */
   cd(path: string): string {
-    const newWorkingFolder = resolvePath(path, this.workingFolder, this.rootFolder);
+    const resolved = resolvePath(path, this.workingFolder, this.rootFolder);
+    if (resolved.length !== 1) {
+      throw new Error(`Path ${path} is invalid.`);
+    }
+
+    const newWorkingFolder = resolved[0];
     if (!newWorkingFolder.isFolder) {
       throw new Error(`Path ${path} is not a folder`);
     }
@@ -60,7 +65,12 @@ export class FileSystemImpl implements FileSystem {
     if (path == null) {
       path = '';
     }
-    const resolvedPath = resolvePath(path, this.workingFolder, this.rootFolder);
+    const resolvedPaths = resolvePath(path, this.workingFolder, this.rootFolder);
+    if (resolvedPaths.length !== 1) {
+      throw new Error(`Path ${path} is invalid.`);
+    }
+    const resolvedPath = resolvedPaths[0];
+
     if (!resolvedPath.isFolder) {
       throw new Error(`Path ${path} is not a folder`);
     }
@@ -97,19 +107,25 @@ export class FileSystemImpl implements FileSystem {
       path = '';
     }
 
-    const target = resolvePath(path, this.workingFolder, this.rootFolder);
-    const targetName = target.name;
-    const targetParent = target.parent as FolderDescriptor;
-
-    if (targetParent == null) {
-      throw new Error(`Cannot delete ${path}. It is the root folder`);
+    const targets = resolvePath(path, this.workingFolder, this.rootFolder);
+    if (targets.length < 1) {
+      throw new Error(`Path ${path} is invalid.`);
     }
 
-    if (target === this.workingFolder) {
-      throw new Error(`Cannot delete ${path}. It is the working folder.`);
-    }
+    for (const target of targets) {
+      const targetName = target.name;
+      const targetParent = target.parent as FolderDescriptor;
 
-    targetParent.removeContent(targetName);
+      if (targetParent == null) {
+        throw new Error(`Cannot delete ${path}. It is the root folder`);
+      }
+
+      if (target === this.workingFolder) {
+        throw new Error(`Cannot delete ${path}. It is the working folder.`);
+      }
+
+      targetParent.removeContent(targetName);
+    }
   }
 
   /**

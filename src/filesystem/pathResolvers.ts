@@ -19,7 +19,7 @@ export function resolvePath(
   path: string,
   workingFolder: FolderDescriptor,
   rootFolder: FolderDescriptor,
-): FileSystemDescriptor {
+): FileSystemDescriptor[] {
   const pathParts = path.split(PATH_SEPARATOR);
   const currentDescriptor = path.startsWith('/') ? rootFolder : workingFolder;
   return resolvePathRecursive(pathParts, currentDescriptor);
@@ -34,11 +34,23 @@ export function resolvePath(
 export function resolvePathRecursive(
   pathParts: string[],
   currentDescriptor: FileSystemDescriptor,
-): FileSystemDescriptor {
+): FileSystemDescriptor[] {
   const nextPart = pathParts.shift();
   if (nextPart == null) {
     // We've reached the end of the path, we can return the current descriptor
-    return currentDescriptor;
+    return [currentDescriptor];
+  }
+
+  if (nextPart === '*') {
+    if (pathParts.length > 0) {
+      throw new Error(`* can only be used as the last part of a path`);
+    }
+
+    if (!currentDescriptor.isFolder) {
+      throw new Error(`Path ${currentDescriptor.name} is not a folder`);
+    }
+    const currentFolder = currentDescriptor as FolderDescriptor;
+    return [...currentFolder.content];
   }
 
   if (nextPart === '' || nextPart === '.') {
@@ -83,7 +95,7 @@ export function resolveFile(
     throw new Error(`Path ${path} is not a valid file name`);
   }
 
-  const targetParent = resolvePath(pathParts.join('/'), workingFolder, rootFolder);
+  const targetParent = resolvePath(pathParts.join('/'), workingFolder, rootFolder)[0];
 
   if (!targetParent.isFolder) {
     throw new Error(`Path ${path} is not a folder`);
