@@ -34,6 +34,8 @@ export interface FolderDescriptor extends FileSystemDescriptor {
    * @throws Error if no child with the given name exists in this folder
    */
   removeContent: (name: string) => void;
+
+  copy: () => FolderDescriptor;
 }
 
 export class FolderDescriptorImpl implements FolderDescriptor {
@@ -104,5 +106,15 @@ export class FolderDescriptorImpl implements FolderDescriptor {
 
   findChild(name: string): FileSystemDescriptor | null {
     return this.content.find((descriptor) => descriptor.name === name) ?? null;
+  }
+
+  copy(): FolderDescriptor {
+    const copy = new FolderDescriptorImpl(this.name, null);
+    copy.content = this.content.map((descriptor) => {
+      const childCopy = descriptor.copy();
+      childCopy.parent = copy;
+      return childCopy;
+    });
+    return copy;
   }
 }
