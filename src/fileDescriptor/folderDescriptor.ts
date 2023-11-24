@@ -6,7 +6,7 @@ import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
  * branch node if hte folder contains any children.
  */
 export interface FolderDescriptor extends FileSystemDescriptor {
-  content: FileSystemDescriptor[];
+  readonly content: FileSystemDescriptor[];
 
   /**
    * Search this directory for a child with the given name.
@@ -40,6 +40,7 @@ export interface FolderDescriptor extends FileSystemDescriptor {
 
 export class FolderDescriptorImpl implements FolderDescriptor {
   isFolder = true;
+  isLink = false;
   name: string;
   parent: FolderDescriptor | null;
   content: FileSystemDescriptor[];

@@ -1,5 +1,6 @@
 import { type FolderDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
 import { buildFolder } from './folderBuilders';
+import { buildLink } from './linkBuilders';
 import { copyPath, movePath } from './pathCopiers';
 import { resolveFile, resolvePath } from './pathResolvers';
 import { type Writable, type Readable } from 'stream';
@@ -161,6 +162,13 @@ export class FileSystemImpl implements FileSystem {
   mv(sourcePath: string, destinationPath: string, newFileName?: string | null): void {
     newFileName = newFileName ?? null;
     movePath(sourcePath, destinationPath, newFileName, this.workingFolder, this.rootFolder);
+  }
+
+  ln(sourcePath: string, destinationPath: string, newFileName?: string | null, hardLink?: boolean): void {
+    newFileName = newFileName ?? null;
+    hardLink = hardLink ?? false;
+
+    buildLink(sourcePath, destinationPath, newFileName, hardLink, this.workingFolder, this.rootFolder);
   }
 
   /**
