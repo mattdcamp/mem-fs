@@ -77,6 +77,7 @@ export interface FileSystem {
 
   /**
    * Search the working directory and all of its subfolders for files with the given name.
+   *
    * @param fileName The name of the file to search for
    * @returns a list of all the paths to files with the given name
    */
