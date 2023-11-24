@@ -76,14 +76,65 @@ export interface FileSystem {
   mv: (sourcePath: string, destinationPath: string, newFileName?: string | null) => void;
 
   /**
+   * Obtain a write stream to the file at the given path. The parent folder and all of its ancestors must exist, but if
+   * the file is missing, it will be created.
+   *
+   * @param path the relative or absolute path to the file
+   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
+   * @returns
+   */
+  createWriteStream: (path: string, append?: boolean) => Writable;
+
+  /**
+   * Write content to the file at the given path. The parent folder and all of its ancestors must exist, but if the file
+   * is missing it will be created.
+   *
+   * @param path the relative or absolute path to the file
+   * @param content the content to write to the file
+   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
+   * @todo Add support for other file content types (binary, etc.)
+   */
+  writeFile: (path: string, content: string, append?: boolean) => Promise<void>;
+
+  /**
+   * Obtain a read stream to the file of the given path.
+   * @param path
+   * @returns
+   */
+  createReadStream: (path: string) => Readable;
+
+  /**
+   * Read the content of the file at the given path.
+   * @param path
+   * @returns
+   */
+  readFile: (path: string) => Promise<string>;
+
+  /**
    * Search the working directory and all of its subfolders for files with the given name.
    *
    * @param fileName The name of the file to search for
    * @returns a list of all the paths to files with the given name
    */
   findFiles: (fileName: string) => string[];
+
+  /**
+   * Crewate a link to a file or folder at the given path. Hardlinks have direct
+   *
+   * @param sourcePath the path to the source file or folder
+   * @param destinationPath the destination folder to write the link to
+   * @param newFileName the new filename to use for the link. If null, the original filename will be used.
+   * @param hardLink true if this should be hard link, false if it should be a soft link. Default is false.
+   * @returns
+   */
+  ln: (sourcePath: string, destinationPath: string, newFileName?: string | null, hardLink?: boolean) => void;
 }
 
+/**
+ * Function that initializes a new filesystem.
+ *
+ * @returns A FileSystem object
+ */
 export function startFileSystem(): FileSystem {
   return new FileSystemImpl();
 }
@@ -180,49 +231,22 @@ export class FileSystemImpl implements FileSystem {
     buildLink(sourcePath, destinationPath, newFileName, hardLink, this.workingFolder, this.rootFolder);
   }
 
-  /**
-   * Obtain a write stream to the file at the given path. The parent folder and all of its ancestors must exist, but if
-   * the file is missing, it will be created.
-   *
-   * @param path the relative or absolute path to the file
-   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
-   * @returns
-   */
   createWriteStream(path: string, append?: boolean): Writable {
     append = append ?? false;
     const targetFile = resolveFile(path, true, this.workingFolder, this.rootFolder);
     return targetFile.content.getWriteableStream(append);
   }
 
-  /**
-   * Write content to the file at the given path. The parent folder and all of its ancestors must exist, but if the file
-   * is missing it will be created.
-   *
-   * @param path the relative or absolute path to the file
-   * @param content the content to write to the file
-   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
-   * @todo Add support for other file content types (binary, etc.)
-   */
   async writeFile(path: string, content: string, append?: boolean): Promise<void> {
     const writer = this.createWriteStream(path, append);
     writer.end(content);
   }
 
-  /**
-   * Obtain a read stream to the file of the given path.
-   * @param path
-   * @returns
-   */
   createReadStream(path: string): Readable {
     const targetFile = resolveFile(path, false, this.workingFolder, this.rootFolder);
     return targetFile.content.getReadableStream();
   }
 
-  /**
-   * Read the content of the file at the given path.
-   * @param path
-   * @returns
-   */
   async readFile(path: string): Promise<string> {
     const reader = this.createReadStream(path);
     const contentChunks = [];
