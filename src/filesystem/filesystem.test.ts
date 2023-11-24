@@ -353,6 +353,18 @@ describe('FileSystemImpl', () => {
       }).toThrow();
     });
   });
+
+  describe('ln', () => {
+    it('should create a softlink', () => {
+      filesystem.ln('subFolder/subFolderFile', '/');
+      expect(filesystem.ls()).toBe('subFolder, file, subFolderFile');
+    });
+
+    it('should create a hardlink', () => {
+      filesystem.ln('subFolder/subFolderFile', '/', null, true);
+      expect(filesystem.ls()).toBe('subFolder, file, subFolderFile');
+    });
+  });
 });
 
 describe('startFileSystem', () => {
