@@ -117,8 +117,24 @@ export interface FileSystem {
    * @returns a list of all the paths to files with the given name
    */
   findFiles: (fileName: string) => string[];
+
+  /**
+   * Crewate a link to a file or folder at the given path. Hardlinks have direct
+   *
+   * @param sourcePath the path to the source file or folder
+   * @param destinationPath the destination folder to write the link to
+   * @param newFileName the new filename to use for the link. If null, the original filename will be used.
+   * @param hardLink true if this should be hard link, false if it should be a soft link. Default is false.
+   * @returns
+   */
+  ln: (sourcePath: string, destinationPath: string, newFileName?: string | null, hardLink?: boolean) => void;
 }
 
+/**
+ * Function that initializes a new filesystem.
+ *
+ * @returns A FileSystem object
+ */
 export function startFileSystem(): FileSystem {
   return new FileSystemImpl();
 }

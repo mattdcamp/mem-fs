@@ -64,6 +64,7 @@ function copyDescriptor(
   destinationFolder: FolderDescriptor,
 ): void {
   const newDescriptor = target.copy();
+  newDescriptor.parent = destinationFolder;
   destinationName = destinationName ?? target.name;
 
   for (let i = 1; destinationFolder.findChild(destinationName) != null; i++) {
