@@ -73,6 +73,41 @@ export interface FileSystem {
    * @throws Error if multiple files are copied to a single new filename
    */
   mv: (sourcePath: string, destinationPath: string, newFileName?: string | null) => void;
+
+  /**
+   * Obtain a write stream to the file at the given path. The parent folder and all of its ancestors must exist, but if
+   * the file is missing, it will be created.
+   *
+   * @param path the relative or absolute path to the file
+   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
+   * @returns
+   */
+  createWriteStream: (path: string, append?: boolean) => Writable;
+
+  /**
+   * Write content to the file at the given path. The parent folder and all of its ancestors must exist, but if the file
+   * is missing it will be created.
+   *
+   * @param path the relative or absolute path to the file
+   * @param content the content to write to the file
+   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
+   * @todo Add support for other file content types (binary, etc.)
+   */
+  writeFile: (path: string, content: string, append?: boolean) => Promise<void>;
+
+  /**
+   * Obtain a read stream to the file of the given path.
+   * @param path
+   * @returns
+   */
+  createReadStream: (path: string) => Readable;
+
+  /**
+   * Read the content of the file at the given path.
+   * @param path
+   * @returns
+   */
+  readFile: (path: string) => Promise<string>;
 }
 
 export function startFileSystem(): FileSystem {
@@ -171,49 +206,22 @@ export class FileSystemImpl implements FileSystem {
     buildLink(sourcePath, destinationPath, newFileName, hardLink, this.workingFolder, this.rootFolder);
   }
 
-  /**
-   * Obtain a write stream to the file at the given path. The parent folder and all of its ancestors must exist, but if
-   * the file is missing, it will be created.
-   *
-   * @param path the relative or absolute path to the file
-   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
-   * @returns
-   */
   createWriteStream(path: string, append?: boolean): Writable {
     append = append ?? false;
     const targetFile = resolveFile(path, true, this.workingFolder, this.rootFolder);
     return targetFile.content.getWriteableStream(append);
   }
 
-  /**
-   * Write content to the file at the given path. The parent folder and all of its ancestors must exist, but if the file
-   * is missing it will be created.
-   *
-   * @param path the relative or absolute path to the file
-   * @param content the content to write to the file
-   * @param append if true, the file will be appended to, otherwise the content will be overwritten. Default is false.
-   * @todo Add support for other file content types (binary, etc.)
-   */
   async writeFile(path: string, content: string, append?: boolean): Promise<void> {
     const writer = this.createWriteStream(path, append);
     writer.end(content);
   }
 
-  /**
-   * Obtain a read stream to the file of the given path.
-   * @param path
-   * @returns
-   */
   createReadStream(path: string): Readable {
     const targetFile = resolveFile(path, false, this.workingFolder, this.rootFolder);
     return targetFile.content.getReadableStream();
   }
 
-  /**
-   * Read the content of the file at the given path.
-   * @param path
-   * @returns
-   */
   async readFile(path: string): Promise<string> {
     const reader = this.createReadStream(path);
     const contentChunks = [];
