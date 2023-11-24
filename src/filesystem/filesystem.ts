@@ -1,4 +1,5 @@
 import { type FolderDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
+import { findFilesRecursive } from './fileFinders';
 import { buildFolder } from './folderBuilders';
 import { buildLink } from './linkBuilders';
 import { copyPath, movePath } from './pathCopiers';
@@ -73,6 +74,14 @@ export interface FileSystem {
    * @throws Error if multiple files are copied to a single new filename
    */
   mv: (sourcePath: string, destinationPath: string, newFileName?: string | null) => void;
+
+  /**
+   * Search the working directory and all of its subfolders for files with the given name.
+   *
+   * @param fileName The name of the file to search for
+   * @returns a list of all the paths to files with the given name
+   */
+  findFiles: (fileName: string) => string[];
 }
 
 export function startFileSystem(): FileSystem {
@@ -221,5 +230,10 @@ export class FileSystemImpl implements FileSystem {
       contentChunks.push(chunk);
     }
     return contentChunks.join('');
+  }
+
+  findFiles(fileName: string): string[] {
+    const files = findFilesRecursive(fileName, this.workingFolder);
+    return files.map((file) => file.path);
   }
 }
