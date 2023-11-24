@@ -1,7 +1,9 @@
 import { type FileContent } from './fileDescriptor';
 import { type FolderDescriptor } from './folderDescriptor';
 
-export type FileSystemDescriptorContent = FileSystemDescriptor[] | FileContent;
+export type FolderContent = FileSystemDescriptor[];
+
+export type FileSystemDescriptorContent = FolderContent | FileContent;
 
 export interface FileSystemDescriptor {
   /**
@@ -33,10 +35,16 @@ export interface FileSystemDescriptor {
    * The date and time this node was created.
    */
   lastModified: Date;
+
   /**
    * Returns true if this node can have children.
    */
   readonly isFolder: boolean;
+
+  /**
+   * Returns true if this node is a link to another node.
+   */
+  readonly isLink: boolean;
 
   /**
    * Returns a copy of this descriptor with a null parent.

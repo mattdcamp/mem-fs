@@ -11,6 +11,7 @@ export interface FileDescriptor extends FileSystemDescriptor {
  */
 export class FileDescriptorImpl implements FileDescriptor {
   isFolder = false;
+  isLink = false;
 
   name: string;
   parent: FolderDescriptorImpl;
@@ -75,8 +76,9 @@ export class FileContentImpl implements FileContent {
 
     const writable = new Writable({
       defaultEncoding: 'utf8',
-      write: (chunk) => {
+      write: (chunk, encoding, callback) => {
         this.content += chunk.toString();
+        callback();
       },
       final: (callback) => {
         this.locked = false;
