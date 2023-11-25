@@ -81,7 +81,7 @@ export function resolvePathRecursive(
 
 /**
  * Resolve a FileDescriptor from a path, creating it if it does not exist and create is true.
- * 
+ *
  * @param path The absolute or relative path to resolve
  * @param create Set to true to create the file if it does not exist
  * @param workingFolder the working directory to use if the path is relative.
