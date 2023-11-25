@@ -1,4 +1,4 @@
-import { type FileDescriptor} from '.';
+import { type FileDescriptor } from '.';
 import { type Readable } from 'stream';
 import { FolderDescriptorImpl } from './folderDescriptor';
 import { FileContentImpl, FileDescriptorImpl } from './fileDescriptor';

@@ -8,7 +8,7 @@ export interface FileDescriptor extends FileSystemDescriptor {
   /**
    * Retrieve a stream that can be used to write content to this node. See
    * https://nodejs.org/api/stream.html#stream_writable_streams for deailts on how to use a Writeable stream.
-   * 
+   *
    * @param append If true, the content will be appended to the existing content. If false, the content will be
    * overwritten.
    * @returns A Writeable stream that can be used to write content to this node.
@@ -16,9 +16,9 @@ export interface FileDescriptor extends FileSystemDescriptor {
   getWriteableStream: (append: boolean) => Writable;
 
   /**
-   * Retrieve a stream that can be used to read content from this node. See 
+   * Retrieve a stream that can be used to read content from this node. See
    * https://nodejs.org/api/stream.html#stream_readable_streams for details on how to use a Readable stream.
-   * 
+   *
    * @returns A Readable stream that can be used to read content from this node.
    */
   getReadableStream: () => Readable;
@@ -28,7 +28,7 @@ export interface FileDescriptor extends FileSystemDescriptor {
 
 /**
  * Create a new file descriptor with the given name and parent.
- * 
+ *
  * @param name The name of the file
  * @param parent The folder the file will reside in
  * @returns A new FileDescriptor
