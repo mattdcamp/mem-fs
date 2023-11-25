@@ -35,8 +35,16 @@ describe('LinkFolderDescriptor', () => {
         expect(hardLinkFolderDescriptor.parent).toBe(rootFolder);
       });
 
-      it('has the same content as the target folder', () => {
-        expect(hardLinkFolderDescriptor.content).toBe(targetFolder.content);
+      it('has the same children as the target folder', () => {
+        expect(hardLinkFolderDescriptor.children).toEqual(targetFolder.children);
+      });
+
+      it('has the same folders as the target folder', () => {
+        expect(hardLinkFolderDescriptor.folders).toEqual(targetFolder.folders);
+      });
+
+      it('has the same files as the target folder', () => {
+        expect(hardLinkFolderDescriptor.files).toEqual(targetFolder.files);
       });
 
       it('has the same last modified date as the target folder', () => {
@@ -69,7 +77,7 @@ describe('LinkFolderDescriptor', () => {
         });
 
         it('updates the content of the link', () => {
-          expect(hardLinkFolderDescriptor.content).toContain(newFolder);
+          expect(hardLinkFolderDescriptor.folders).toContain(newFolder);
         });
       });
 
@@ -80,7 +88,7 @@ describe('LinkFolderDescriptor', () => {
         });
 
         it('updates the content of the target folder', () => {
-          expect(targetFolder.content).toContain(newFolder);
+          expect(targetFolder.folders).toContain(newFolder);
         });
       });
     });
@@ -128,8 +136,8 @@ describe('LinkFolderDescriptor', () => {
         expect(copy.name).toBe(hardLinkFolderDescriptor.name);
       });
 
-      it('has the same content', () => {
-        expect(copy.content).toBe(hardLinkFolderDescriptor.content);
+      it('has the same files and folders', () => {
+        expect(copy.children).toEqual(hardLinkFolderDescriptor.children);
       });
 
       it('is a folder', () => {
@@ -163,7 +171,7 @@ describe('LinkFolderDescriptor', () => {
       });
 
       it('has the same content as the target folder', () => {
-        expect(softLinkFolderDescriptor.content).toBe(targetFolder.content);
+        expect(softLinkFolderDescriptor.children).toEqual(targetFolder.children);
       });
 
       it('has the same last modified date as the target folder', () => {
@@ -196,7 +204,7 @@ describe('LinkFolderDescriptor', () => {
         });
 
         it('updates the content of the link', () => {
-          expect(softLinkFolderDescriptor.content).toContain(newFolder);
+          expect(softLinkFolderDescriptor.folders).toContain(newFolder);
         });
       });
 
@@ -207,7 +215,7 @@ describe('LinkFolderDescriptor', () => {
         });
 
         it('updates the content of the target folder', () => {
-          expect(targetFolder.content).toContain(newFolder);
+          expect(targetFolder.folders).toContain(newFolder);
         });
       });
     });
@@ -256,7 +264,7 @@ describe('LinkFolderDescriptor', () => {
       });
 
       it('has the same content', () => {
-        expect(copy.content).toBe(softLinkFolderDescriptor.content);
+        expect(copy.children).toEqual(softLinkFolderDescriptor.children);
       });
 
       it('is a folder', () => {
@@ -270,7 +278,7 @@ describe('LinkFolderDescriptor', () => {
       });
 
       it('throws error when accessing the link', () => {
-        expect(() => softLinkFolderDescriptor.content).toThrow();
+        expect(() => softLinkFolderDescriptor.children).toThrow();
       });
     });
 
@@ -281,7 +289,7 @@ describe('LinkFolderDescriptor', () => {
       });
 
       it('throws error when accessing the link', () => {
-        expect(() => softLinkFolderDescriptor.content).toThrow();
+        expect(() => softLinkFolderDescriptor.children).toThrow();
       });
     });
   });

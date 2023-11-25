@@ -17,7 +17,7 @@ describe('folderBuilders', () => {
         expect(folder.name).toBe('folder');
         expect(folder.parent).toBe(rootFolder);
         expect(folder.path).toBe('/folder/');
-        expect(folder.content).toEqual([]);
+        expect(folder.children).toEqual([]);
       });
 
       it('should create a folder with parent', () => {
@@ -84,10 +84,10 @@ describe('folderBuilders', () => {
 
         it('should append to the existing folder', () => {
           buildFolder('folder/subfolder1', true, rootFolder, rootFolder);
-          expect(folder.content.length).toBe(1);
+          expect(folder.children.length).toBe(1);
 
           buildFolder('folder/subfolder2', true, rootFolder, rootFolder);
-          expect(folder.content.length).toBe(2);
+          expect(folder.children.length).toBe(2);
         });
       });
 
@@ -134,7 +134,7 @@ describe('folderBuilders', () => {
         expect(folder.name).toBe('folder');
         expect(folder.parent).toBe(rootFolder);
         expect(folder.path).toBe('/folder/');
-        expect(folder.content).toEqual([]);
+        expect(folder.children).toEqual([]);
       });
 
       it('should create parent folders', () => {
@@ -166,7 +166,7 @@ describe('folderBuilders', () => {
         }).toThrow();
 
         expect(rootFolder.findChild('folder')).toBeNull();
-        expect(rootFolder.content.length).toBe(1); // existingFolder
+        expect(rootFolder.children.length).toBe(1); // existingFolder
       });
 
       it('should throw an error if all folders already exist', () => {
@@ -175,7 +175,7 @@ describe('folderBuilders', () => {
         }).toThrow();
 
         expect(rootFolder.findChild('folder')).toBeNull();
-        expect(rootFolder.content.length).toBe(1); // existingFolder
+        expect(rootFolder.children.length).toBe(1); // existingFolder
       });
 
       it('should throw an error if the parent folder does not exist and makeParents is false', () => {
@@ -184,7 +184,7 @@ describe('folderBuilders', () => {
         }).toThrow();
 
         expect(rootFolder.findChild('folder')).toBeNull();
-        expect(rootFolder.content.length).toBe(1); // existingFolder
+        expect(rootFolder.children.length).toBe(1); // existingFolder
       });
 
       it('should throw an error if the path traverses a file', () => {
@@ -195,7 +195,7 @@ describe('folderBuilders', () => {
         }).toThrow();
 
         expect(rootFolder.findChild('folder')).toBeNull();
-        expect(rootFolder.content.length).toBe(2); // existingFolder, file
+        expect(rootFolder.children.length).toBe(2); // existingFolder, file
       });
     });
   });

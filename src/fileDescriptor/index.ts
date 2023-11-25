@@ -22,11 +22,6 @@ export interface FileSystemDescriptor {
   parent: FolderDescriptor | null;
 
   /**
-   * The content of the node, which differs based on the specific type of node.
-   */
-  content: FileSystemDescriptorContent;
-
-  /**
    * The size of the node's content in bytes.
    */
   readonly size: number;
