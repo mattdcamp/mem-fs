@@ -8,7 +8,7 @@ In order to simplify installation, a Docker image is provided which runs the ini
 Ubuntu contianer. This will ensure the correct version of Node and all dependencies. If you already have Docker installed, this will be the simplest option to see the code execute.
 1. (If you don't already have it) Install Docker for your operating system [Docker Documentation](https://www.docker.com/get-started/)
 1. (If you haven't logged in before) Log in to DockerHub via the installed application.
-1. Run the image from dockerhub: `docker run -it mattdcamp/mem-fs:latest`
+1. Run the image from dockerhub: `docker run -it mattdcamp/mem-fs:release`
 
 ### Local Install
 You can also run a local version of the application.
