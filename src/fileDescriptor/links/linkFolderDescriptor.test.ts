@@ -1,5 +1,7 @@
 import { HardLinkFolderDescriptorImpl, SoftLinkFolderDescriptorImpl } from './linkFolderDescriptor';
-import { type FolderDescriptor, FolderDescriptorImpl, FileDescriptorImpl } from '..';
+import { type FolderDescriptor } from '..';
+import { FolderDescriptorImpl } from '../folderDescriptor';
+import { FileDescriptorImpl } from '../fileDescriptor';
 
 describe('LinkFolderDescriptor', () => {
   let rootFolder: FolderDescriptor;

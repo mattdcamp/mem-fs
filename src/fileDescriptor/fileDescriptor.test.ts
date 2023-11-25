@@ -1,5 +1,7 @@
-import { type FileDescriptor, FileDescriptorImpl, FolderDescriptorImpl, FileContentImpl } from '.';
+import { type FileDescriptor} from '.';
 import { type Readable } from 'stream';
+import { FolderDescriptorImpl } from './folderDescriptor';
+import { FileContentImpl, FileDescriptorImpl } from './fileDescriptor';
 
 describe('fileDescriptor', () => {
   describe('creating a file', () => {

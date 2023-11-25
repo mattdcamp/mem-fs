@@ -1,10 +1,10 @@
 import { type FileDescriptor, type FolderDescriptor } from '../fileDescriptor';
 import {
-  HardLinkFileDescriptorImpl,
-  HardLinkFolderDescriptorImpl,
+  buildFileHardLink,
+  buildFileSoftLink,
+  buildFolderHardLink,
+  buildFolderSoftLink,
   type LinkDescriptor,
-  SoftLinkFileDescriptorImpl,
-  SoftLinkFolderDescriptorImpl,
 } from '../fileDescriptor/links';
 import { resolvePath } from './pathResolvers';
 
@@ -39,16 +39,16 @@ export function buildLink(
   if (source.isFolder) {
     const sourceFolder = source as FolderDescriptor;
     if (hardLink) {
-      link = new HardLinkFolderDescriptorImpl(sourceFolder, destinationName, destinationFolder);
+      link = buildFolderHardLink(sourceFolder, destinationName, destinationFolder);
     } else {
-      link = new SoftLinkFolderDescriptorImpl(sourceFolder, destinationName, destinationFolder, rootFolder);
+      link = buildFolderSoftLink(sourceFolder, destinationName, destinationFolder, rootFolder);
     }
   } else {
     const sourceFile = source as FileDescriptor;
     if (hardLink) {
-      link = new HardLinkFileDescriptorImpl(sourceFile, destinationName, destinationFolder);
+      link = buildFileHardLink(sourceFile, destinationName, destinationFolder);
     } else {
-      link = new SoftLinkFileDescriptorImpl(sourceFile, destinationName, destinationFolder, rootFolder);
+      link = buildFileSoftLink(sourceFile, destinationName, destinationFolder, rootFolder);
     }
   }
   destinationFolder.addContent(link);

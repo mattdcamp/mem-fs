@@ -59,6 +59,17 @@ export interface FolderDescriptor extends FileSystemDescriptor {
   copy: () => FolderDescriptor;
 }
 
+/**
+ * Create a new folder descriptor with the given name and parent.
+ * 
+ * @param name The name of the folder. `null` is allowed for the root node.
+ * @param parent The folder the new folder will reside in. `null` is allowed for the root node.
+ * @returns A new Fol,derDescriptor
+ */
+export function buildFolderDescriptor(name?: string | null, parent?: FolderDescriptor | null): FolderDescriptor {
+  return new FolderDescriptorImpl(name, parent);
+}
+
 export class FolderDescriptorImpl implements FolderDescriptor {
   isFolder = true;
   isLink = false;

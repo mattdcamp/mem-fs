@@ -1,4 +1,4 @@
-import { type FolderDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
+import { buildFolderDescriptor, type FolderDescriptor } from '../fileDescriptor';
 import { buildFolder } from './folderBuilders';
 import { buildLink } from './linkBuilders';
 import { copyPath, movePath } from './pathCopiers';
@@ -143,7 +143,7 @@ export class FileSystemImpl implements FileSystem {
   workingFolder: FolderDescriptor;
 
   constructor() {
-    this.rootFolder = new FolderDescriptorImpl();
+    this.rootFolder = buildFolderDescriptor();
     this.workingFolder = this.rootFolder;
   }
 
@@ -233,7 +233,7 @@ export class FileSystemImpl implements FileSystem {
   createWriteStream(path: string, append?: boolean): Writable {
     append = append ?? false;
     const targetFile = resolveFile(path, true, this.workingFolder, this.rootFolder);
-    return targetFile.content.getWriteableStream(append);
+    return targetFile.getWriteableStream(append);
   }
 
   async writeFile(path: string, content: string, append?: boolean): Promise<void> {
@@ -243,7 +243,7 @@ export class FileSystemImpl implements FileSystem {
 
   createReadStream(path: string): Readable {
     const targetFile = resolveFile(path, false, this.workingFolder, this.rootFolder);
-    return targetFile.content.getReadableStream();
+    return targetFile.getReadableStream();
   }
 
   async readFile(path: string): Promise<string> {

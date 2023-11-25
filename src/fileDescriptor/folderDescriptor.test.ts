@@ -1,4 +1,6 @@
-import { type FileSystemDescriptor, FolderDescriptorImpl, FileDescriptorImpl, type FileDescriptor } from '.';
+import { type FileSystemDescriptor } from '.';
+import { FileDescriptorImpl } from './fileDescriptor';
+import { FolderDescriptorImpl } from './folderDescriptor';
 
 describe('folderDescriptor', () => {
   let rootFolder: FolderDescriptorImpl;
@@ -152,7 +154,7 @@ describe('folderDescriptor', () => {
     });
 
     describe('folder with files with data', () => {
-      let subFile: FileDescriptor;
+      let subFile: FileDescriptorImpl;
       beforeEach(() => {
         subFile = new FileDescriptorImpl('subFile', rootFolder);
         const streamWriter = subFile.content.getWriteableStream(false);

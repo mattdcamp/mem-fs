@@ -1,5 +1,5 @@
 import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
-import { type FolderDescriptor, type FileSystemDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
+import { type FolderDescriptor, type FileSystemDescriptor, buildFolderDescriptor } from '../fileDescriptor';
 
 /**
  * Helper function to create folder nodes in the tree. The path is split into parts, and each part is resolved recursivly.
@@ -71,7 +71,7 @@ function buildFolderRecusive(pathParts: string[], makeParents: boolean, currentD
     throw new Error(`Cannot create ${nextPart}. It is a reserved name`);
   }
 
-  const newFolder = new FolderDescriptorImpl(nextPart, currentFolder);
+  const newFolder = buildFolderDescriptor(nextPart, currentFolder);
   buildFolderRecusive(pathParts, makeParents, newFolder);
 
   // the folder is only added to the parent after validating that all its children can be resolved or created. If any

@@ -1,9 +1,6 @@
-import {
-  type FileDescriptor,
-  FileDescriptorImpl,
-  type FolderDescriptor,
-  FolderDescriptorImpl,
-} from '../fileDescriptor';
+import { type FileDescriptor, type FolderDescriptor } from '../fileDescriptor';
+import { FileDescriptorImpl } from '../fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from '../fileDescriptor/folderDescriptor';
 import { buildLink } from './linkBuilders';
 
 describe('linkBuilders', () => {
@@ -28,11 +25,8 @@ describe('linkBuilders', () => {
 
     describe('folder links', () => {
       describe('hard link', () => {
-        beforeEach(() => {
-          buildLink('targetFolder', '/', 'link', true, workingFolder, rootFolder);
-        });
-
         it('creates a hard link to the source folder', () => {
+          buildLink('targetFolder', '/', 'link', true, workingFolder, rootFolder);
           const link = rootFolder.findChild('link');
           expect(link).not.toBeNull();
           expect(link?.isFolder).toBe(true);
@@ -42,11 +36,8 @@ describe('linkBuilders', () => {
       });
 
       describe('soft link', () => {
-        beforeEach(() => {
-          buildLink('targetFolder', '/', 'link', false, workingFolder, rootFolder);
-        });
-
         it('creates a hard link to the source folder', () => {
+          buildLink('targetFolder', '/', 'link', false, workingFolder, rootFolder);
           const link = rootFolder.findChild('link');
           expect(link).not.toBeNull();
           expect(link?.isFolder).toBe(true);
@@ -58,11 +49,8 @@ describe('linkBuilders', () => {
 
     describe('file links', () => {
       describe('hard link', () => {
-        beforeEach(() => {
-          buildLink('targetFile', '/', 'link', true, workingFolder, rootFolder);
-        });
-
         it('creates a hard link to the source folder', () => {
+          buildLink('targetFile', '/', 'link', true, workingFolder, rootFolder);
           const link = rootFolder.findChild('link');
           expect(link).not.toBeNull();
           expect(link?.isFolder).toBe(false);
@@ -71,11 +59,8 @@ describe('linkBuilders', () => {
         });
       });
       describe('soft link', () => {
-        beforeEach(() => {
-          buildLink('targetFile', '/', 'link', false, workingFolder, rootFolder);
-        });
-
         it('creates a hard link to the source folder', () => {
+          buildLink('targetFile', '/', 'link', false, workingFolder, rootFolder);
           const link = rootFolder.findChild('link');
           expect(link).not.toBeNull();
           expect(link?.isFolder).toBe(false);

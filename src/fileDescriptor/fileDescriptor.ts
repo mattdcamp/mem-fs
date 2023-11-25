@@ -1,9 +1,40 @@
 import { type FileSystemDescriptor, type FolderDescriptor } from '.';
 import { Writable, Readable } from 'stream';
 
+/**
+ * A content node of the file system.
+ */
 export interface FileDescriptor extends FileSystemDescriptor {
-  content: FileContent;
+  /**
+   * Retrieve a stream that can be used to write content to this node. See
+   * https://nodejs.org/api/stream.html#stream_writable_streams for deailts on how to use a Writeable stream.
+   * 
+   * @param append If true, the content will be appended to the existing content. If false, the content will be
+   * overwritten.
+   * @returns A Writeable stream that can be used to write content to this node.
+   */
+  getWriteableStream: (append: boolean) => Writable;
+
+  /**
+   * Retrieve a stream that can be used to read content from this node. See 
+   * https://nodejs.org/api/stream.html#stream_readable_streams for details on how to use a Readable stream.
+   * 
+   * @returns A Readable stream that can be used to read content from this node.
+   */
+  getReadableStream: () => Readable;
+
   copy: () => FileDescriptor;
+}
+
+/**
+ * Create a new file descriptor with the given name and parent.
+ * 
+ * @param name The name of the file
+ * @param parent The folder the file will reside in
+ * @returns A new FileDescriptor
+ */
+export function buildFileDescriptor(name: string, parent: FolderDescriptor): FileDescriptor {
+  return new FileDescriptorImpl(name, parent);
 }
 
 /**
@@ -35,6 +66,14 @@ export class FileDescriptorImpl implements FileDescriptor {
 
   get size(): number {
     return this.content.size;
+  }
+
+  getWriteableStream(append?: boolean): Writable {
+    return this.content.getWriteableStream(append);
+  }
+
+  getReadableStream(): Readable {
+    return this.content.getReadableStream();
   }
 
   copy(): FileDescriptor {
