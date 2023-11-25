@@ -1,9 +1,9 @@
-import { type SoftLinkDescriptor, type HardLinkDescriptor } from '.';
+import { type SoftLinkDescriptor, type HardLinkDescriptor, type LinkDescriptor } from '.';
 import { type FileDescriptor, type FileSystemDescriptor, type FolderDescriptor } from '..';
 import { PATH_SEPARATOR } from '../../constants';
-import { resolvePath } from '../../filesystem/pathResolvers';
+import { resolvePath } from '../../controllers/pathResolvers';
 
-export abstract class LinkFolderDescriptor implements FolderDescriptor {
+export abstract class LinkFolderDescriptor implements FolderDescriptor, LinkDescriptor {
   readonly isFolder = true;
   readonly isLink = true;
 
@@ -11,6 +11,7 @@ export abstract class LinkFolderDescriptor implements FolderDescriptor {
   parent: FolderDescriptor | null;
 
   abstract readonly link: FolderDescriptor;
+  abstract readonly isHardLink: boolean;
 
   constructor(name?: string | null, parent?: FolderDescriptor | null) {
     this.name = name ?? '';
@@ -64,6 +65,26 @@ export abstract class LinkFolderDescriptor implements FolderDescriptor {
   abstract copy(): FolderDescriptor;
 }
 
+/**
+ * Constructs a new hard link folder descriptor
+ *
+ * @param link The Folder to link to
+ * @param name The name of the link
+ * @param parent The parent folder that this link will reside in
+ * @returns a new HardLinkFolderDescriptor
+ */
+export function buildFolderHardLink(
+  link: FolderDescriptor,
+  name: string,
+  parent: FolderDescriptor | null,
+): LinkFolderDescriptor {
+  return new HardLinkFolderDescriptorImpl(link, name, parent);
+}
+
+/**
+ * The default implementation of a hard link descriptor for Folders. Implements the link property as a hard link to the
+ * FileDescriptor. This will allow the link to persist, even it the original folder is deleted or moved.
+ */
 export class HardLinkFolderDescriptorImpl extends LinkFolderDescriptor implements HardLinkDescriptor, FolderDescriptor {
   readonly isHardLink = true;
   link: FolderDescriptor;
@@ -78,6 +99,29 @@ export class HardLinkFolderDescriptorImpl extends LinkFolderDescriptor implement
   }
 }
 
+/**
+ * Constructs a new soft link folder descriptor
+ *
+ * @param link The Folder to link to
+ * @param name The name of the link
+ * @param parent The parent folder that this link will reside in
+ * @param rootFolder The root folder of the filesystem
+ * @returns a new SoftLinkFolderDescriptor
+ */
+export function buildFolderSoftLink(
+  link: FolderDescriptor,
+  name: string,
+  parent: FolderDescriptor | null,
+  rootFolder: FolderDescriptor,
+): LinkFolderDescriptor {
+  return new SoftLinkFolderDescriptorImpl(link, name, parent, rootFolder);
+}
+
+/**
+ * The default implementation of a soft link descriptor for Folders. Implements the link property as an absolute path
+ * which is resolved each time the link is used. This means if the original folder is deleted or moved, the link will stop
+ * working.
+ */
 export class SoftLinkFolderDescriptorImpl extends LinkFolderDescriptor implements SoftLinkDescriptor, FolderDescriptor {
   readonly isHardLink = false;
   linkAbsolutePath: string;

@@ -1,4 +1,5 @@
-import { FileDescriptorImpl, FolderDescriptorImpl } from '../fileDescriptor';
+import { FileDescriptorImpl } from './fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from './fileDescriptor/folderDescriptor';
 import { type FileSystem, FileSystemImpl, startFileSystem } from './filesystem';
 
 describe('FileSystemImpl', () => {

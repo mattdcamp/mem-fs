@@ -1,9 +1,6 @@
-import {
-  type FolderDescriptor,
-  type FileDescriptor,
-  FolderDescriptorImpl,
-  FileDescriptorImpl,
-} from '../fileDescriptor';
+import { type FolderDescriptor, type FileDescriptor } from '../fileDescriptor';
+import { FileDescriptorImpl } from '../fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from '../fileDescriptor/folderDescriptor';
 import { copyPath, movePath } from './pathCopiers';
 
 describe('pathCopiers', () => {
@@ -29,12 +26,12 @@ describe('pathCopiers', () => {
 
     subFile = new FileDescriptorImpl('subFile.txt', sourceFolder);
     subFileContent = 'subFileContent';
-    subFile.content.getWriteableStream(false).end(subFileContent);
+    subFile.getWriteableStream(false).end(subFileContent);
     sourceFolder.addContent(subFile);
 
     subSubFile = new FileDescriptorImpl('subSubFile.txt', subFolder);
     subSubFileContent = 'subSubFileContent';
-    subSubFile.content.getWriteableStream(false).end(subSubFileContent);
+    subSubFile.getWriteableStream(false).end(subSubFileContent);
     subFolder.addContent(subSubFile);
   });
 
@@ -48,7 +45,7 @@ describe('pathCopiers', () => {
         expect(copiedDescriptor?.isFolder).toBe(false);
 
         const copiedFile = copiedDescriptor as FileDescriptor;
-        expect(copiedFile.content.getReadableStream().read().toString()).toBe(subFileContent);
+        expect(copiedFile.getReadableStream().read().toString()).toBe(subFileContent);
         expect(sourceFolder.findChild('subFile.txt')).not.toBeNull();
       });
 
@@ -60,7 +57,7 @@ describe('pathCopiers', () => {
         expect(copiedDescriptor?.isFolder).toBe(false);
 
         const copiedFile = copiedDescriptor as FileDescriptor;
-        expect(copiedFile.content.getReadableStream().read().toString()).toBe(subFileContent);
+        expect(copiedFile.getReadableStream().read().toString()).toBe(subFileContent);
         expect(sourceFolder.findChild('subFile.txt')).not.toBeNull();
       });
     });
@@ -75,7 +72,7 @@ describe('pathCopiers', () => {
         const copiedFolder = copiedDescriptor as FolderDescriptor;
         const copiedFile = copiedFolder.findChild('subSubFile.txt') as FileDescriptor;
         expect(copiedFile).not.toBeNull();
-        expect(copiedFile.content.getReadableStream().read().toString()).toBe(subSubFileContent);
+        expect(copiedFile.getReadableStream().read().toString()).toBe(subSubFileContent);
         expect(sourceFolder.findChild('subFolder')).not.toBeNull();
       });
     });
@@ -97,9 +94,7 @@ describe('pathCopiers', () => {
           const copiedDescriptor = sourceFolder.findChild('subFile.txt (1)');
           expect(copiedDescriptor).not.toBeNull();
           expect(copiedDescriptor?.isFolder).toBe(false);
-          expect((copiedDescriptor as FileDescriptor).content.getReadableStream().read().toString()).toBe(
-            subFileContent,
-          );
+          expect((copiedDescriptor as FileDescriptor).getReadableStream().read().toString()).toBe(subFileContent);
           expect(sourceFolder.findChild('subFile.txt')).not.toBeNull();
         });
 
@@ -165,7 +160,7 @@ describe('pathCopiers', () => {
         expect(movedDescriptor?.isFolder).toBe(false);
 
         const movedFile = movedDescriptor as FileDescriptor;
-        expect(movedFile.content.getReadableStream().read().toString()).toBe(subFileContent);
+        expect(movedFile.getReadableStream().read().toString()).toBe(subFileContent);
         expect(sourceFolder.findChild('subFile.txt')).toBeNull();
       });
 
@@ -177,7 +172,7 @@ describe('pathCopiers', () => {
         expect(copiedDescriptor?.isFolder).toBe(false);
 
         const movedFile = copiedDescriptor as FileDescriptor;
-        expect(movedFile.content.getReadableStream().read().toString()).toBe(subFileContent);
+        expect(movedFile.getReadableStream().read().toString()).toBe(subFileContent);
         expect(sourceFolder.findChild('subFile.txt')).toBeNull();
       });
     });
@@ -192,7 +187,7 @@ describe('pathCopiers', () => {
         const movedFolder = movedDescriptor as FolderDescriptor;
         const movedFile = movedFolder.findChild('subSubFile.txt') as FileDescriptor;
         expect(movedFile).not.toBeNull();
-        expect(movedFile.content.getReadableStream().read().toString()).toBe(subSubFileContent);
+        expect(movedFile.getReadableStream().read().toString()).toBe(subSubFileContent);
         expect(sourceFolder.findChild('subFolder')).toBeNull();
       });
     });
@@ -214,9 +209,7 @@ describe('pathCopiers', () => {
           const movedDescriptor = sourceFolder.findChild('subFile.txt (1)');
           expect(movedDescriptor).not.toBeNull();
           expect(movedDescriptor?.isFolder).toBe(false);
-          expect((movedDescriptor as FileDescriptor).content.getReadableStream().read().toString()).toBe(
-            subFileContent,
-          );
+          expect((movedDescriptor as FileDescriptor).getReadableStream().read().toString()).toBe(subFileContent);
           expect(sourceFolder.findChild('subFile.txt')).toBeNull();
         });
 

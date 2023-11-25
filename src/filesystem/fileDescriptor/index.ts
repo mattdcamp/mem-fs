@@ -1,10 +1,8 @@
-import { type FileContent } from './fileDescriptor';
 import { type FolderDescriptor } from './folderDescriptor';
 
-export type FolderContent = FileSystemDescriptor[];
-
-export type FileSystemDescriptorContent = FolderContent | FileContent;
-
+/**
+ * Describer for all files and folders in the filesystem.
+ */
 export interface FileSystemDescriptor {
   /**
    * The path from the root of the filesytem to this descriptor.
@@ -47,5 +45,7 @@ export interface FileSystemDescriptor {
   copy: () => FileSystemDescriptor;
 }
 
-export * from './fileDescriptor';
-export * from './folderDescriptor';
+export * from './linkDescriptor';
+
+export { type FileDescriptor, buildFileDescriptor } from './fileDescriptor';
+export { type FolderDescriptor, buildFolderDescriptor } from './folderDescriptor';

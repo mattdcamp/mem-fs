@@ -1,6 +1,6 @@
 import { PATH_SEPARATOR } from '../constants';
 import {
-  FileDescriptorImpl,
+  buildFileDescriptor,
   type FileDescriptor,
   type FileSystemDescriptor,
   type FolderDescriptor,
@@ -107,12 +107,12 @@ export function resolveFile(
     if (!create) {
       throw new Error(`Path ${path} does not exist`);
     }
-    taretDescriptor = new FileDescriptorImpl(fileName, targetFolder);
+    taretDescriptor = buildFileDescriptor(fileName, targetFolder);
     targetFolder.addContent(taretDescriptor);
   }
 
   if (taretDescriptor.isFolder) {
     throw new Error(`Path ${path} is a folder`);
   }
-  return taretDescriptor as FileDescriptorImpl;
+  return taretDescriptor as FileDescriptor;
 }

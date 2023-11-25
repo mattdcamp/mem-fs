@@ -1,15 +1,17 @@
-import { HardLinkFileDescriptorImpl, SoftLinkFileDescriptorImpl } from '.';
-import { type FileDescriptor, FileDescriptorImpl, type FolderDescriptor, FolderDescriptorImpl } from '..';
+import { type FileDescriptor, type FolderDescriptor } from '..';
+import { FileDescriptorImpl } from '../fileDescriptor';
+import { FolderDescriptorImpl } from '../folderDescriptor';
+import { HardLinkFileDescriptorImpl, SoftLinkFileDescriptorImpl } from './linkFileDescriptor';
 
 describe('linkFileDescriptor', () => {
   let rootFolder: FolderDescriptor;
-  let targetFile: FileDescriptor;
+  let targetFile: FileDescriptorImpl;
 
   beforeEach(() => {
     rootFolder = new FolderDescriptorImpl();
     targetFile = new FileDescriptorImpl('target', rootFolder);
     rootFolder.addContent(targetFile);
-    const stream = targetFile.content.getWriteableStream(false);
+    const stream = targetFile.getWriteableStream(false);
     stream.write('content');
     stream.end();
   });
@@ -53,7 +55,8 @@ describe('linkFileDescriptor', () => {
 
     describe('content', () => {
       it('has the same content as the target file', () => {
-        expect(hardLinkFileDescriptor.content).toBe(targetFile.content);
+        const content = hardLinkFileDescriptor.getReadableStream().read(10000);
+        expect(content).toBe('content');
       });
 
       describe('when the target file content changes', () => {
@@ -62,18 +65,18 @@ describe('linkFileDescriptor', () => {
         });
 
         it('has the same content as the target file', () => {
-          const content = hardLinkFileDescriptor.content.getReadableStream().read(10000);
+          const content = hardLinkFileDescriptor.getReadableStream().read(10000);
           expect(content).toBe('content new content');
         });
       });
 
       describe('when the hard link content changes', () => {
         beforeEach(() => {
-          hardLinkFileDescriptor.content.getWriteableStream(false).end('new content');
+          hardLinkFileDescriptor.getWriteableStream(false).end('new content');
         });
 
         it('has the same content as the target file', () => {
-          const content = targetFile.content.getReadableStream().read(10000);
+          const content = targetFile.getReadableStream().read(10000);
           expect(content).toBe('new content');
         });
       });
@@ -137,7 +140,8 @@ describe('linkFileDescriptor', () => {
 
     describe('content', () => {
       it('has the same content as the target file', () => {
-        expect(softLinkFileDescriptor.content).toBe(targetFile.content);
+        const content = softLinkFileDescriptor.getReadableStream().read(10000);
+        expect(content).toBe('content');
       });
 
       describe('when the target file content changes', () => {
@@ -146,18 +150,18 @@ describe('linkFileDescriptor', () => {
         });
 
         it('has the same content as the target file', () => {
-          const content = softLinkFileDescriptor.content.getReadableStream().read(10000);
+          const content = softLinkFileDescriptor.getReadableStream().read(10000);
           expect(content).toBe('content new content');
         });
       });
 
       describe('when the link content changes', () => {
         beforeEach(() => {
-          softLinkFileDescriptor.content.getWriteableStream(false).end('new content');
+          softLinkFileDescriptor.getWriteableStream(false).end('new content');
         });
 
         it('has the same content as the target file', () => {
-          const content = targetFile.content.getReadableStream().read(10000);
+          const content = targetFile.getReadableStream().read(10000);
           expect(content).toBe('new content');
         });
       });
