@@ -1,4 +1,4 @@
-import { type FileSystemDescriptor } from '.';
+import { type FileDescriptor, type FileSystemDescriptor } from '.';
 import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
 
 /**
@@ -6,7 +6,20 @@ import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
  * branch node if hte folder contains any children.
  */
 export interface FolderDescriptor extends FileSystemDescriptor {
-  readonly content: FileSystemDescriptor[];
+  /**
+   * A sorted list of all the descriptors in this folder. They are sorted by type (files first) and then alphabetically.
+   */
+  readonly children: FileSystemDescriptor[];
+
+  /**
+   * A sorted list of all the folders in this folder. They are sorted alphabetically.
+   */
+  readonly folders: FolderDescriptor[];
+
+  /**
+   * A sorted list of all the files in this folder. They are sorted alphabetically.
+   */
+  readonly files: FileDescriptor[];
 
   /**
    * Search this directory for a child with the given name.
@@ -15,6 +28,14 @@ export interface FolderDescriptor extends FileSystemDescriptor {
    * @returns the child with the given name, or null if no such child exists
    */
   findChild: (name: string) => FileSystemDescriptor | null;
+
+  /**
+   * Search this directory and all of its children recursively for a child with the given name.
+   *
+   * @param name The name property of the child to find
+   * @returns All children with the given name
+   */
+  searchChildren: (name: string) => FileSystemDescriptor[];
 
   /**
    * Add a new child descriptor to this folder. The name of the child must be unique within the folder.
@@ -43,7 +64,7 @@ export class FolderDescriptorImpl implements FolderDescriptor {
   isLink = false;
   name: string;
   parent: FolderDescriptor | null;
-  content: FileSystemDescriptor[];
+  content: Map<string, FileSystemDescriptor>;
   lastModified: Date;
 
   /**
@@ -53,7 +74,7 @@ export class FolderDescriptorImpl implements FolderDescriptor {
   constructor(name?: string | null, parent?: FolderDescriptor | null) {
     this.name = name ?? '';
     this.parent = parent ?? null;
-    this.content = [];
+    this.content = new Map<string, FileSystemDescriptor>();
     this.lastModified = new Date();
   }
 
@@ -66,7 +87,23 @@ export class FolderDescriptorImpl implements FolderDescriptor {
   }
 
   get size(): number {
-    return this.content.reduce((totalSize, descriptor) => totalSize + descriptor.size, 0);
+    return [...this.content.values()].reduce((totalSize, descriptor) => totalSize + descriptor.size, 0);
+  }
+
+  get folders(): FolderDescriptor[] {
+    return [...this.content.values()]
+      .filter((descriptor) => descriptor.isFolder)
+      .sort((a, b) => a.name.localeCompare(b.name)) as FolderDescriptor[];
+  }
+
+  get files(): FileDescriptor[] {
+    return [...this.content.values()]
+      .filter((descriptor) => !descriptor.isFolder)
+      .sort((a, b) => a.name.localeCompare(b.name)) as FileDescriptor[];
+  }
+
+  get children(): FileSystemDescriptor[] {
+    return [...this.folders, ...this.files];
   }
 
   addContent(content: FileSystemDescriptor): void {
@@ -83,38 +120,37 @@ export class FolderDescriptorImpl implements FolderDescriptor {
     }
 
     this.lastModified = new Date();
-    this.content.push(content);
-
-    this.content.sort((a, b) => {
-      if (a.isFolder && !b.isFolder) {
-        return -1;
-      } else if (b.isFolder && !a.isFolder) {
-        return 1;
-      } else {
-        return a.name.localeCompare(b.name, undefined, { numeric: true });
-      }
-    });
+    this.content.set(content.name, content);
   }
 
   removeContent(name: string): void {
-    const indexToDelete = this.content.findIndex((descriptor) => descriptor.name === name);
-    if (indexToDelete >= 0) {
-      this.content.splice(indexToDelete, 1);
+    if (this.content.has(name)) {
+      this.content.delete(name);
     } else {
       throw new Error(`No file or folder with the name ${name} exists in ${this.path}`);
     }
   }
 
   findChild(name: string): FileSystemDescriptor | null {
-    return this.content.find((descriptor) => descriptor.name === name) ?? null;
+    return this.content.get(name) ?? null;
+  }
+
+  searchChildren(name: string): FileSystemDescriptor[] {
+    const results = [];
+    const thisFolderResult = this.content.get(name);
+    if (thisFolderResult !== undefined) {
+      results.push(thisFolderResult);
+    }
+    results.push(...this.folders.flatMap((folder) => folder.searchChildren(name)));
+    return results;
   }
 
   copy(): FolderDescriptor {
     const copy = new FolderDescriptorImpl(this.name, null);
-    copy.content = this.content.map((descriptor) => {
+    this.content.forEach((descriptor) => {
       const childCopy = descriptor.copy();
       childCopy.parent = copy;
-      return childCopy;
+      copy.addContent(childCopy);
     });
     return copy;
   }

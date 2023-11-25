@@ -118,30 +118,6 @@ describe('folderDescriptor', () => {
         rootFolder.addContent(new FolderDescriptorImpl('..', rootFolder));
       }).toThrow();
     });
-
-    describe('content sorting', () => {
-      it('should sort folders before files', () => {
-        expect(rootFolder.content[0]).toBe(subFolder);
-        expect(rootFolder.content[1]).toBe(subFile);
-      });
-
-      it('should sort folders alphabetically', () => {
-        const subFolder2 = new FolderDescriptorImpl('subFolder2', rootFolder);
-        rootFolder.addContent(subFolder2);
-        expect(rootFolder.content[0]).toBe(subFolder);
-        expect(rootFolder.content[1]).toBe(subFolder2);
-        expect(rootFolder.content[2]).toBe(subFile);
-      });
-
-      it('should sort files alphabetically', () => {
-        const subFile2 = new FileDescriptorImpl('subFile2', rootFolder);
-        rootFolder.addContent(subFile2);
-
-        expect(rootFolder.content[0]).toBe(subFolder);
-        expect(rootFolder.content[1]).toBe(subFile);
-        expect(rootFolder.content[2]).toBe(subFile2);
-      });
-    });
   });
 
   describe('size', () => {

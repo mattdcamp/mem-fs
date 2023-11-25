@@ -1,5 +1,4 @@
 import { type FolderDescriptor, FolderDescriptorImpl } from '../fileDescriptor';
-import { findFilesRecursive } from './fileFinders';
 import { buildFolder } from './folderBuilders';
 import { buildLink } from './linkBuilders';
 import { copyPath, movePath } from './pathCopiers';
@@ -180,7 +179,7 @@ export class FileSystemImpl implements FileSystem {
       throw new Error(`Path ${path} is not a folder`);
     }
     const resolvedFolder = resolvedPath as FolderDescriptor;
-    return resolvedFolder.content.map((descriptor) => descriptor.name).join(', ');
+    return resolvedFolder.children.map((descriptor) => descriptor.name).join(', ');
   }
 
   mkdir(path: string, makeParents?: boolean | null): void {
@@ -257,7 +256,7 @@ export class FileSystemImpl implements FileSystem {
   }
 
   findFiles(fileName: string): string[] {
-    const files = findFilesRecursive(fileName, this.workingFolder);
+    const files = this.workingFolder.searchChildren(fileName);
     return files.map((file) => file.path);
   }
 }

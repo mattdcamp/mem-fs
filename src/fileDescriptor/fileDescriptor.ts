@@ -1,4 +1,4 @@
-import { type FolderDescriptorImpl, type FileSystemDescriptor } from '.';
+import { type FileSystemDescriptor, type FolderDescriptor } from '.';
 import { Writable, Readable } from 'stream';
 
 export interface FileDescriptor extends FileSystemDescriptor {
@@ -14,7 +14,7 @@ export class FileDescriptorImpl implements FileDescriptor {
   isLink = false;
 
   name: string;
-  parent: FolderDescriptorImpl;
+  parent: FolderDescriptor;
   content: FileContentImpl;
   lastModified: Date;
 
@@ -22,7 +22,7 @@ export class FileDescriptorImpl implements FileDescriptor {
    * @param name The filename of the file
    * @param parent The parent folder of the file
    */
-  constructor(name: string, parent: FolderDescriptorImpl) {
+  constructor(name: string, parent: FolderDescriptor) {
     this.name = name;
     this.parent = parent;
     this.content = new FileContentImpl();

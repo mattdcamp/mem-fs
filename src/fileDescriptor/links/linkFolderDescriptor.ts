@@ -1,5 +1,5 @@
 import { type SoftLinkDescriptor, type HardLinkDescriptor } from '.';
-import { type FileSystemDescriptor, type FolderDescriptor } from '..';
+import { type FileDescriptor, type FileSystemDescriptor, type FolderDescriptor } from '..';
 import { PATH_SEPARATOR } from '../../constants';
 import { resolvePath } from '../../filesystem/pathResolvers';
 
@@ -17,6 +17,18 @@ export abstract class LinkFolderDescriptor implements FolderDescriptor {
     this.parent = parent ?? null;
   }
 
+  get children(): FileSystemDescriptor[] {
+    return this.link.children;
+  }
+
+  get folders(): FolderDescriptor[] {
+    return this.link.folders;
+  }
+
+  get files(): FileDescriptor[] {
+    return this.link.files;
+  }
+
   get size(): number {
     return this.link.size;
   }
@@ -29,12 +41,12 @@ export abstract class LinkFolderDescriptor implements FolderDescriptor {
     }
   }
 
-  get content(): FileSystemDescriptor[] {
-    return this.link.content;
-  }
-
   get lastModified(): Date {
     return this.link.lastModified;
+  }
+
+  searchChildren(name: string): FileSystemDescriptor[] {
+    return this.link.searchChildren(name);
   }
 
   findChild(name: string): FileSystemDescriptor | null {

@@ -50,7 +50,7 @@ export function resolvePathRecursive(
       throw new Error(`Path ${currentDescriptor.name} is not a folder`);
     }
     const currentFolder = currentDescriptor as FolderDescriptor;
-    return [...currentFolder.content];
+    return [...currentFolder.children];
   }
 
   if (nextPart === '' || nextPart === '.') {
