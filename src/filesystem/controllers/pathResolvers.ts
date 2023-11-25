@@ -28,7 +28,7 @@ export function resolvePath(
 /**
  * Helper function to resolve a Descriptor from a path, already split into subarts (generally using the ) starting at the current directory.
  */
-function resolvePathRecursive(
+export function resolvePathRecursive(
   pathParts: string[],
   currentDescriptor: FileSystemDescriptor,
 ): FileSystemDescriptor[] {
