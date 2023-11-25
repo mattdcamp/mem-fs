@@ -70,6 +70,9 @@ export function buildFolderDescriptor(name?: string | null, parent?: FolderDescr
   return new FolderDescriptorImpl(name, parent);
 }
 
+/**
+ * The default implementation of {@link FolderDescriptor}.
+ */
 export class FolderDescriptorImpl implements FolderDescriptor {
   isFolder = true;
   isLink = false;
@@ -78,10 +81,6 @@ export class FolderDescriptorImpl implements FolderDescriptor {
   content: Map<string, FileSystemDescriptor>;
   lastModified: Date;
 
-  /**
-   * @param name The name of the folder. Null is allowed for the root node.
-   * @param parent The parent folder of this folder. Null is allowed for the root node.
-   */
   constructor(name?: string | null, parent?: FolderDescriptor | null) {
     this.name = name ?? '';
     this.parent = parent ?? null;
