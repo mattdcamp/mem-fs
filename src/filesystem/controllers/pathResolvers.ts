@@ -27,9 +27,6 @@ export function resolvePath(
 
 /**
  * Helper function to resolve a Descriptor from a path, already split into subarts (generally using the ) starting at the current directory.
- * @param pathParts
- * @param currentDescriptor
- * @returns
  */
 export function resolvePathRecursive(
   pathParts: string[],
@@ -82,6 +79,18 @@ export function resolvePathRecursive(
   }
 }
 
+/**
+ * Resolve a FileDescriptor from a path, creating it if it does not exist and create is true.
+ *
+ * @param path The absolute or relative path to resolve
+ * @param create Set to true to create the file if it does not exist
+ * @param workingFolder the working directory to use if the path is relative.
+ * @param rootFolder the absolute root directory to use if the path is absolute.
+ * @returns The specified FileDescriptor
+ * @throws Error if the path is invalid in any way.
+ * @throws Error if the path is a folder
+ * @throws Error if the path does not exist and create is false
+ */
 export function resolveFile(
   path: string,
   create: boolean,
