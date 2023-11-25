@@ -1,8 +1,5 @@
+import { buildFolder, buildLink, copyPath, movePath, resolveFile, resolvePath } from './controllers';
 import { buildFolderDescriptor, type FolderDescriptor } from './fileDescriptor';
-import { buildFolder } from './folderBuilders';
-import { buildLink } from './linkBuilders';
-import { copyPath, movePath } from './pathCopiers';
-import { resolveFile, resolvePath } from './pathResolvers';
 import { type Writable, type Readable } from 'stream';
 
 export interface FileSystem {

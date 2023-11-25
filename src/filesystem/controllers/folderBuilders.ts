@@ -1,5 +1,5 @@
-import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from './constants';
-import { type FolderDescriptor, type FileSystemDescriptor, buildFolderDescriptor } from './fileDescriptor';
+import { DISALLOWED_CONTENT_NAMES, PATH_SEPARATOR } from '../constants';
+import { type FolderDescriptor, type FileSystemDescriptor, buildFolderDescriptor } from '../fileDescriptor';
 
 /**
  * Helper function to create folder nodes in the tree. The path is split into parts, and each part is resolved recursivly.

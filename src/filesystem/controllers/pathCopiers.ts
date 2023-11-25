@@ -1,4 +1,4 @@
-import { type FileSystemDescriptor, type FolderDescriptor } from './fileDescriptor';
+import { type FileSystemDescriptor, type FolderDescriptor } from '../fileDescriptor';
 import { resolvePath } from './pathResolvers';
 
 export function copyPath(

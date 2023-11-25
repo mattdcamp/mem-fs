@@ -1,7 +1,7 @@
 import { type Readable, type Writable } from 'stream';
 import { type SoftLinkDescriptor, type HardLinkDescriptor, type LinkDescriptor } from '.';
 import { type FileSystemDescriptor, type FileDescriptor, type FolderDescriptor } from '..';
-import { resolvePath } from '../../pathResolvers';
+import { resolvePath } from '../../controllers/pathResolvers';
 
 /**
  * The default implementation of a link descriptor. Subclasses should implement a property called `link` that returns

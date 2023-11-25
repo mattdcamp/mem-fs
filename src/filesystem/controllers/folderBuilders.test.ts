@@ -1,6 +1,6 @@
-import { type FolderDescriptor } from './fileDescriptor';
-import { FileDescriptorImpl } from './fileDescriptor/fileDescriptor';
-import { FolderDescriptorImpl } from './fileDescriptor/folderDescriptor';
+import { type FolderDescriptor } from '../fileDescriptor';
+import { FileDescriptorImpl } from '../fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from '../fileDescriptor/folderDescriptor';
 import { buildFolder } from './folderBuilders';
 
 describe('folderBuilders', () => {

@@ -1,11 +1,11 @@
-import { type FileDescriptor, type FolderDescriptor } from './fileDescriptor';
+import { type FileDescriptor, type FolderDescriptor } from '../fileDescriptor';
 import {
   buildFileHardLink,
   buildFileSoftLink,
   buildFolderHardLink,
   buildFolderSoftLink,
   type LinkDescriptor,
-} from './fileDescriptor/linkDescriptor';
+} from '../fileDescriptor/linkDescriptor';
 import { resolvePath } from './pathResolvers';
 
 export function buildLink(
