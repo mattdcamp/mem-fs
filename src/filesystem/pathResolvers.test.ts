@@ -1,5 +1,5 @@
-import { FileDescriptorImpl } from '../fileDescriptor/fileDescriptor';
-import { FolderDescriptorImpl } from '../fileDescriptor/folderDescriptor';
+import { FileDescriptorImpl } from './fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from './fileDescriptor/folderDescriptor';
 import { resolveFile, resolvePath, resolvePathRecursive } from './pathResolvers';
 
 describe('pathResolvers', () => {

@@ -1,7 +1,7 @@
 import { type SoftLinkDescriptor, type HardLinkDescriptor, type LinkDescriptor } from '.';
 import { type FileDescriptor, type FileSystemDescriptor, type FolderDescriptor } from '..';
 import { PATH_SEPARATOR } from '../../constants';
-import { resolvePath } from '../../filesystem/pathResolvers';
+import { resolvePath } from '../../pathResolvers';
 
 export abstract class LinkFolderDescriptor implements FolderDescriptor, LinkDescriptor {
   readonly isFolder = true;

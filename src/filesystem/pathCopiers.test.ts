@@ -1,9 +1,6 @@
-import {
-  type FolderDescriptor,
-  type FileDescriptor,
-} from '../fileDescriptor';
-import { FileDescriptorImpl } from '../fileDescriptor/fileDescriptor';
-import { FolderDescriptorImpl } from '../fileDescriptor/folderDescriptor';
+import { type FolderDescriptor, type FileDescriptor } from './fileDescriptor';
+import { FileDescriptorImpl } from './fileDescriptor/fileDescriptor';
+import { FolderDescriptorImpl } from './fileDescriptor/folderDescriptor';
 import { copyPath, movePath } from './pathCopiers';
 
 describe('pathCopiers', () => {

@@ -1,4 +1,4 @@
-import { buildFolderDescriptor, type FolderDescriptor } from '../fileDescriptor';
+import { buildFolderDescriptor, type FolderDescriptor } from './fileDescriptor';
 import { buildFolder } from './folderBuilders';
 import { buildLink } from './linkBuilders';
 import { copyPath, movePath } from './pathCopiers';

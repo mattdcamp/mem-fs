@@ -45,7 +45,7 @@ export interface FileSystemDescriptor {
   copy: () => FileSystemDescriptor;
 }
 
-export * from './links';
+export * from './linkDescriptor';
 
 export { type FileDescriptor, buildFileDescriptor } from './fileDescriptor';
 export { type FolderDescriptor, buildFolderDescriptor } from './folderDescriptor';

@@ -1,10 +1,10 @@
-import { PATH_SEPARATOR } from '../constants';
+import { PATH_SEPARATOR } from './constants';
 import {
   buildFileDescriptor,
   type FileDescriptor,
   type FileSystemDescriptor,
   type FolderDescriptor,
-} from '../fileDescriptor';
+} from './fileDescriptor';
 
 /**
  * Helper function to resolve a Descriptor from a path starting at the workingDirectory.
